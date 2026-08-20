@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Gihun456 {
@@ -18,20 +19,34 @@ public class Gihun456 {
         System.out.println();
         Scanner sc = new Scanner(System.in);
 
+        ArrayList<String> storage = new ArrayList<>();
+
         while (sc.hasNextLine()) {
             String userInput = sc.nextLine();
             String cmd = userInput.trim();
 
-            if (cmd.equalsIgnoreCase("bye")) {
-                System.out.println(FAREWELL);
-                break;
-            } else if (cmd.isEmpty()) {
-                continue;
-            } else {
-                System.out.println(cmd);
-                System.out.println();
-            }
+            if (!cmd.isEmpty()) {
+                if (cmd.equalsIgnoreCase("bye")) {
+                    System.out.println(FAREWELL);
+                    break;
+                } else if (cmd.equalsIgnoreCase("list")) {
+                    if (storage.isEmpty()) {
+                        System.out.println("Storage empty");
+                        System.out.println();
 
+                        continue;
+                    }
+                    for (int i = 0; i < storage.size(); i++) {
+                        System.out.println((i + 1) + ". " + storage.get(i));
+                    }
+                    System.out.println();
+                } else {
+                    System.out.println("added: " + cmd);
+                    System.out.println();
+
+                    storage.add(cmd); // Storing trimmed value
+                }
+            }
         }
     }
 }
