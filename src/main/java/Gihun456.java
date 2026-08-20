@@ -1,4 +1,6 @@
-﻿public class Gihun456 {
+import java.util.Scanner;
+
+public class Gihun456 {
     public static void main(String[] args) {
         String banner = """
                           ____ _ _                 _  _  ____   __   
@@ -9,10 +11,27 @@
                         """;
         System.out.println(banner);
 
-        String greeting = "Hello! I'm Gihun456.\nWhat can I do for you?";
-        String farewell = "Bye. Hope to see you again soon!";
+        final String GREETING = "Hello! I'm Gihun456.\nWhat can I do for you?";
+        final String FAREWELL = "Bye. Hope to see you again soon!";
 
-        System.out.println(greeting);
-        System.out.println(farewell);
+        System.out.println(GREETING);
+        System.out.println();
+        Scanner sc = new Scanner(System.in);
+
+        while (sc.hasNextLine()) {
+            String userInput = sc.nextLine();
+            String cmd = userInput.trim();
+
+            if (cmd.equalsIgnoreCase("bye")) {
+                System.out.println(FAREWELL);
+                break;
+            } else if (cmd.isEmpty()) {
+                continue;
+            } else {
+                System.out.println(cmd);
+                System.out.println();
+            }
+
+        }
     }
 }
