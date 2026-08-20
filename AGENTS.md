@@ -9,8 +9,8 @@ Unless the user says otherwise, assume that you are assisting a student working 
 # Student profile
 
 * Prior knowledge: Basic Java and OOP concepts.
-* Level of programming experience: [to be filled]
-* IDE and level of expertise: [to be filled]
+* Level of programming experience: Advanced (regularly participates in Leetcode weekly contests, 250+ Leetcode problems solved, teaching assistant for CS2040)
+* IDE and level of expertise: Visual studio code, have been using VSC for 5 semesters
 
 # Guidance for interacting with users
 
