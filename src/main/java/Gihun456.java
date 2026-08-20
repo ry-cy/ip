@@ -15,15 +15,19 @@ public class Gihun456 {
         final String GREETING = "Hello! I'm Gihun456.\nWhat can I do for you?";
         final String FAREWELL = "Bye. Hope to see you again soon!";
 
+        final String LIST_TASKS = "Here are the tasks in your list:";
+        final String ADD_TASK = "Added this task to your list: ";
+        final String MARK_TASK = "Nice! I've marked this task as done:";
+        final String UNMARK_TASK = "OK, I've marked this task as not done yet:";
+
         System.out.println(GREETING);
         System.out.println();
         Scanner sc = new Scanner(System.in);
 
-        ArrayList<String> storage = new ArrayList<>();
+        ArrayList<Task> storage = new ArrayList<>();
 
         while (sc.hasNextLine()) {
-            String userInput = sc.nextLine();
-            String cmd = userInput.trim();
+            String cmd = sc.nextLine();
 
             if (!cmd.isEmpty()) {
                 if (cmd.equalsIgnoreCase("bye")) {
@@ -36,15 +40,37 @@ public class Gihun456 {
 
                         continue;
                     }
+                    System.out.println(LIST_TASKS);
                     for (int i = 0; i < storage.size(); i++) {
-                        System.out.println((i + 1) + ". " + storage.get(i));
+                        Task current = storage.get(i);
+                        System.out.println((i + 1) + ". " + current.toString());
                     }
                     System.out.println();
                 } else {
-                    System.out.println("added: " + cmd);
-                    System.out.println();
+                    String[] cmdArray = cmd.split(" ");
+                    
 
-                    storage.add(cmd); // Storing trimmed value
+                    if (cmdArray[0].equalsIgnoreCase("mark")) {
+                        Task current = storage.get(Integer.parseInt(cmdArray[1]) - 1);
+                        current.markTaskAsDone();
+
+                        System.out.println(MARK_TASK);
+                        System.out.println(current.toString());
+                        System.out.println();
+                    } else if (cmdArray[0].equalsIgnoreCase("unmark")) {
+                        Task current = storage.get(Integer.parseInt(cmdArray[1]) - 1);
+                        current.markTaskAsNotDone();
+
+                        System.out.println(UNMARK_TASK);
+                        System.out.println(current.toString());
+                        System.out.println();
+                    } else {
+                        Task newTask = new Task(cmd);
+
+                        storage.add(newTask);
+                        System.out.println(ADD_TASK + newTask.toString());
+                        System.out.println();
+                    }
                 }
             }
         }
