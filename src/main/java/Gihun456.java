@@ -17,6 +17,7 @@ public class Gihun456 {
 
         final String LIST_TASKS = "Here are the tasks in your list:";
         final String ADD_TASK = "Got it. I've added this task:";
+        final String REMOVE_TASK = "Noted. I've removed this task:";
         final String MARK_TASK = "Nice! I've marked this task as done:";
         final String UNMARK_TASK = "OK, I've marked this task as not done yet:";
 
@@ -127,6 +128,17 @@ public class Gihun456 {
                         currentTask.markTaskAsNotDone();
 
                         System.out.println(UNMARK_TASK);
+                        System.out.println(currentTask.toString());
+                        System.out.println();
+                        break;
+                    }
+
+                    case "delete" : {
+                        int toDelete = Integer.parseInt(arguments) - 1;
+                        Task currentTask = storage.get(toDelete);
+                        storage.remove(toDelete);
+
+                        System.out.println(REMOVE_TASK);
                         System.out.println(currentTask.toString());
                         System.out.println();
                         break;
