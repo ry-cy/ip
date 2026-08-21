@@ -16,7 +16,7 @@ public class Gihun456 {
         final String FAREWELL = "Bye. Hope to see you again soon!";
 
         final String LIST_TASKS = "Here are the tasks in your list:";
-        final String ADD_TASK = "Added this task to your list: ";
+        final String ADD_TASK = "Got it. I've added this task:";
         final String MARK_TASK = "Nice! I've marked this task as done:";
         final String UNMARK_TASK = "OK, I've marked this task as not done yet:";
 
@@ -27,50 +27,116 @@ public class Gihun456 {
         ArrayList<Task> storage = new ArrayList<>();
 
         while (sc.hasNextLine()) {
-            String cmd = sc.nextLine();
+            String input = sc.nextLine();
 
-            if (!cmd.isEmpty()) {
-                if (cmd.equalsIgnoreCase("bye")) {
-                    System.out.println(FAREWELL);
+            String[] parts = input.split(" ", 2);
+
+            String command = parts[0];
+            String arguments = parts.length > 1 ? parts[1] : "";
+
+            switch (command) {
+                case "todo": {
+                    System.out.println(ADD_TASK);
+                    Task newTask = new Todo(arguments);
+                    storage.add(newTask);
+
+                    System.out.println(newTask.toString());
+                    System.out.println(String.format(
+                        "Now you have %d tasks in the list.", storage.size()));
+                    System.out.println();
                     break;
-                } else if (cmd.equalsIgnoreCase("list")) {
+                }
+
+                case "deadline": {
+                    int byIndex = arguments.indexOf("/by");
+
+                    String taskName =
+                            arguments.substring(0, byIndex).trim();
+
+                    String dueDate =
+                            arguments.substring(byIndex + 3).trim();
+
+                    System.out.println(ADD_TASK);
+                    Task newTask = new Deadline(taskName, dueDate);
+                    storage.add(newTask);
+
+                    System.out.println(newTask.toString());
+                    System.out.println(String.format(
+                        "Now you have %d tasks in the list.", storage.size()));
+                    System.out.println();
+                    break;
+                }
+
+                case "event": {
+                    int fromIndex = arguments.indexOf("/from");
+                    int toIndex = arguments.indexOf("/to");
+
+                    String taskName =
+                            arguments.substring(0, fromIndex).trim();
+
+                    String startDate =
+                            arguments.substring(fromIndex + 5, toIndex).trim();
+
+                    String endDate =
+                            arguments.substring(toIndex + 3).trim();
+
+                    System.out.println(ADD_TASK);
+                    Task newTask = new Event(taskName, startDate, endDate);
+                    storage.add(newTask);
+
+                    System.out.println(newTask.toString());
+                    System.out.println(String.format(
+                        "Now you have %d tasks in the list.", storage.size()));
+                    System.out.println();
+                    break;
+                }
+
+                case "list" :
                     if (storage.isEmpty()) {
                         System.out.println("Storage empty");
                         System.out.println();
-
-                        continue;
-                    }
-                    System.out.println(LIST_TASKS);
-                    for (int i = 0; i < storage.size(); i++) {
-                        Task current = storage.get(i);
-                        System.out.println((i + 1) + ". " + current.toString());
-                    }
-                    System.out.println();
-                } else {
-                    String[] cmdArray = cmd.split(" ");
-
-                    if (cmdArray[0].equalsIgnoreCase("mark")) {
-                        Task current = storage.get(Integer.parseInt(cmdArray[1]) - 1);
-                        current.markTaskAsDone();
-
-                        System.out.println(MARK_TASK);
-                        System.out.println(current.toString());
-                        System.out.println();
-                    } else if (cmdArray[0].equalsIgnoreCase("unmark")) {
-                        Task current = storage.get(Integer.parseInt(cmdArray[1]) - 1);
-                        current.markTaskAsNotDone();
-
-                        System.out.println(UNMARK_TASK);
-                        System.out.println(current.toString());
-                        System.out.println();
+                        break;
                     } else {
-                        Task newTask = new Task(cmd);
-
-                        storage.add(newTask);
-                        System.out.println(ADD_TASK + newTask.toString());
+                        System.out.println(LIST_TASKS);
+                        for (int i = 0; i < storage.size(); i++) {
+                            Task currentTask = storage.get(i);
+                            System.out.println((i + 1) + ". " + currentTask.toString());
+                        }
                         System.out.println();
+                        break;
                     }
+                
+                case "mark" : {
+                    int toMark = Integer.parseInt(arguments) - 1;
+                    Task currentTask = storage.get(toMark);
+                    currentTask.markTaskAsDone();
+
+                    System.out.println(MARK_TASK);
+                    System.out.println(currentTask.toString());
+                    System.out.println();
+                    break;
                 }
+                
+                case "unmark" : {
+                    int toUnmark = Integer.parseInt(arguments) - 1;
+                    Task currentTask = storage.get(toUnmark);
+                    currentTask.markTaskAsNotDone();
+
+                    System.out.println(UNMARK_TASK);
+                    System.out.println(currentTask.toString());
+                    System.out.println();
+                    break;
+                }
+
+                case "bye": {
+                    System.out.println(FAREWELL);
+                    return;
+                }
+                
+                default: 
+                    System.out.println(command);
+                    System.out.println();
+                    break;
             }
         }
     }
