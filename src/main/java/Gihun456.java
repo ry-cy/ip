@@ -134,14 +134,22 @@ public class Gihun456 {
                     }
 
                     case "delete" : {
-                        int toDelete = Integer.parseInt(arguments) - 1;
-                        Task currentTask = storage.get(toDelete);
-                        storage.remove(toDelete);
+                        if (storage.isEmpty()) {
+                            System.out.println("Storage empty");
+                            System.out.println();
+                            break;
+                        } else {
+                            int toDelete = Integer.parseInt(arguments) - 1;
+                            Task currentTask = storage.get(toDelete);
+                            storage.remove(toDelete);
 
-                        System.out.println(REMOVE_TASK);
-                        System.out.println(currentTask.toString());
-                        System.out.println();
-                        break;
+                            System.out.println(REMOVE_TASK);
+                            System.out.println(currentTask.toString());
+                            System.out.println(String.format(
+                                "Now you have %d tasks in the list.", storage.size()));
+                            System.out.println();
+                            break;
+                        }
                     }
 
                     case "bye": {
