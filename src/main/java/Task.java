@@ -1,3 +1,11 @@
+/**
+ * Task class to track tasks
+ * Supports Todo, Deadline and Event
+ * 
+ * @param taskName Description of task
+ * @param isDone Status of task
+ */
+
 public class Task {
     protected String taskName;
     protected boolean isDone;

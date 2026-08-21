@@ -48,7 +48,6 @@ public class Gihun456 {
                     System.out.println();
                 } else {
                     String[] cmdArray = cmd.split(" ");
-                    
 
                     if (cmdArray[0].equalsIgnoreCase("mark")) {
                         Task current = storage.get(Integer.parseInt(cmdArray[1]) - 1);
