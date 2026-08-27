@@ -1,9 +1,6 @@
 /**
- * Task class to track tasks
- * Supports Todo, Deadline and Event
- * 
- * @param taskName Description of task
- * @param isDone Status of task
+ * Task class to track tasks.
+ * Supports Todo, Deadline and Event.
  */
 
 public class Task {
@@ -19,11 +16,11 @@ public class Task {
         return isDone ? "X" : " ";
     }
 
-    public void markTaskAsDone() {
+    public void markAsDone() {
         this.isDone = true;
     }
 
-    public void markTaskAsNotDone() {
+    public void markAsNotDone() {
         this.isDone = false;
     }
 
