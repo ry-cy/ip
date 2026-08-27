@@ -39,6 +39,7 @@ public class Storage {
      * Loads tasks from the previous snapshot.
      *
      * @return List of tasks, empty list if previous snapshot does not exist.
+     * @throws GihunException If the task could not be loaded.
      */
     public static List<Task> loadTasks() throws GihunException {
         List<Task> tasks = new ArrayList<>();
