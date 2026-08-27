@@ -32,12 +32,13 @@ public class Gihun456 {
 
             String[] parts = input.split(" ", 2);
 
-            String command = parts[0];
+            String commandInput = parts[0];
             String arguments = parts.length > 1 ? parts[1] : "";
 
             try {
-                switch (command) {
-                    case "todo": {
+                Operation operation = Operation.fromInput(commandInput);
+                switch (operation) {
+                    case TODO: {
                         if (arguments.trim().isEmpty()) {
                             throw new GihunException("The description of a todo cannot be empty.");
                         }
@@ -52,7 +53,7 @@ public class Gihun456 {
                         break;
                     }
 
-                    case "deadline": {
+                    case DEADLINE: {
                         int byIndex = arguments.indexOf("/by");
 
                         String taskName =
@@ -72,7 +73,7 @@ public class Gihun456 {
                         break;
                     }
 
-                    case "event": {
+                    case EVENT: {
                         int fromIndex = arguments.indexOf("/from");
                         int toIndex = arguments.indexOf("/to");
 
@@ -96,7 +97,7 @@ public class Gihun456 {
                         break;
                     }
 
-                    case "list" :
+                    case LIST:
                         if (storage.isEmpty()) {
                             System.out.println("Storage empty");
                             System.out.println(SEP);
@@ -111,7 +112,7 @@ public class Gihun456 {
                             break;
                         }
                     
-                    case "mark" : {
+                    case MARK: {
                         int toMark = Integer.parseInt(arguments) - 1;
                         Task currentTask = storage.get(toMark);
                         currentTask.markTaskAsDone();
@@ -122,7 +123,7 @@ public class Gihun456 {
                         break;
                     }
                     
-                    case "unmark" : {
+                    case UNMARK: {
                         int toUnmark = Integer.parseInt(arguments) - 1;
                         Task currentTask = storage.get(toUnmark);
                         currentTask.markTaskAsNotDone();
@@ -133,7 +134,7 @@ public class Gihun456 {
                         break;
                     }
 
-                    case "delete" : {
+                    case DELETE: {
                         if (storage.isEmpty()) {
                             System.out.println("Storage empty");
                             System.out.println(SEP);
@@ -152,13 +153,11 @@ public class Gihun456 {
                         }
                     }
 
-                    case "bye": {
+                    case BYE: {
                         System.out.println(FAREWELL);
                         return;
                     }
 
-                    default:
-                        throw new GihunException("Operation not supported.");
                 }
             } catch (GihunException ge) {
                 printError(ge.getMessage());
