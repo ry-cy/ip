@@ -2,26 +2,25 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Gihun456 {
-    public static void main(String[] args) {
-        final String BANNER = """
+    static final String BANNER = """
                           ____ _ _                 _  _  ____   __   
                          / ___(_) |__  _   _ _ __ | || || ___| / /_  
                         | |  _| | '_ \\| | | | '_ \\| || ||___ \\| '_ \\ 
                         | |_| | | | | | |_| | | | |__   _|__) | (_) |
                          \\____|_|_| |_|\\__,_|_| |_|  |_||____/ \\___/ 
                         """;
+
+    static final String GREETING = "Hello! I'm Gihun456.\nWhat can I do for you?";
+    static final String FAREWELL = "Bye. Hope to see you again soon!";
+    static final String SEP = "____________________________________________________________";
+
+    static final String LIST_TASKS = "Here are the tasks in your list:";
+    static final String ADD_TASK = "Got it. I've added this task:";
+    static final String REMOVE_TASK = "Noted. I've removed this task:";
+    static final String MARK_TASK = "Nice! I've marked this task as done:";
+    static final String UNMARK_TASK = "OK, I've marked this task as not done yet:";
+    public static void main(String[] args) {
         System.out.println(BANNER);
-
-        final String GREETING = "Hello! I'm Gihun456.\nWhat can I do for you?";
-        final String FAREWELL = "Bye. Hope to see you again soon!";
-        final String SEP = "____________________________________________________________";
-
-        final String LIST_TASKS = "Here are the tasks in your list:";
-        final String ADD_TASK = "Got it. I've added this task:";
-        final String REMOVE_TASK = "Noted. I've removed this task:";
-        final String MARK_TASK = "Nice! I've marked this task as done:";
-        final String UNMARK_TASK = "OK, I've marked this task as not done yet:";
-
         System.out.println(GREETING);
         System.out.println(SEP);
         Scanner sc = new Scanner(System.in);
