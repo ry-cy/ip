@@ -3,17 +3,18 @@ import java.util.Scanner;
 
 public class Gihun456 {
     public static void main(String[] args) {
-        String banner = """
+        final String BANNER = """
                           ____ _ _                 _  _  ____   __   
                          / ___(_) |__  _   _ _ __ | || || ___| / /_  
                         | |  _| | '_ \\| | | | '_ \\| || ||___ \\| '_ \\ 
                         | |_| | | | | | |_| | | | |__   _|__) | (_) |
                          \\____|_|_| |_|\\__,_|_| |_|  |_||____/ \\___/ 
                         """;
-        System.out.println(banner);
+        System.out.println(BANNER);
 
         final String GREETING = "Hello! I'm Gihun456.\nWhat can I do for you?";
         final String FAREWELL = "Bye. Hope to see you again soon!";
+        final String SEP = "____________________________________________________________";
 
         final String LIST_TASKS = "Here are the tasks in your list:";
         final String ADD_TASK = "Got it. I've added this task:";
@@ -22,7 +23,7 @@ public class Gihun456 {
         final String UNMARK_TASK = "OK, I've marked this task as not done yet:";
 
         System.out.println(GREETING);
-        System.out.println();
+        System.out.println(SEP);
         Scanner sc = new Scanner(System.in);
 
         ArrayList<Task> storage = new ArrayList<>();
@@ -48,7 +49,7 @@ public class Gihun456 {
                         System.out.println(newTask.toString());
                         System.out.println(String.format(
                             "Now you have %d tasks in the list.", storage.size()));
-                        System.out.println();
+                        System.out.println(SEP);
                         break;
                     }
 
@@ -68,7 +69,7 @@ public class Gihun456 {
                         System.out.println(newTask.toString());
                         System.out.println(String.format(
                             "Now you have %d tasks in the list.", storage.size()));
-                        System.out.println();
+                        System.out.println(SEP);
                         break;
                     }
 
@@ -92,14 +93,14 @@ public class Gihun456 {
                         System.out.println(newTask.toString());
                         System.out.println(String.format(
                             "Now you have %d tasks in the list.", storage.size()));
-                        System.out.println();
+                        System.out.println(SEP);
                         break;
                     }
 
                     case "list" :
                         if (storage.isEmpty()) {
                             System.out.println("Storage empty");
-                            System.out.println();
+                            System.out.println(SEP);
                             break;
                         } else {
                             System.out.println(LIST_TASKS);
@@ -107,7 +108,7 @@ public class Gihun456 {
                                 Task currentTask = storage.get(i);
                                 System.out.println((i + 1) + ". " + currentTask.toString());
                             }
-                            System.out.println();
+                            System.out.println(SEP);
                             break;
                         }
                     
@@ -118,7 +119,7 @@ public class Gihun456 {
 
                         System.out.println(MARK_TASK);
                         System.out.println(currentTask.toString());
-                        System.out.println();
+                        System.out.println(SEP);
                         break;
                     }
                     
@@ -129,14 +130,14 @@ public class Gihun456 {
 
                         System.out.println(UNMARK_TASK);
                         System.out.println(currentTask.toString());
-                        System.out.println();
+                        System.out.println(SEP);
                         break;
                     }
 
                     case "delete" : {
                         if (storage.isEmpty()) {
                             System.out.println("Storage empty");
-                            System.out.println();
+                            System.out.println(SEP);
                             break;
                         } else {
                             int toDelete = Integer.parseInt(arguments) - 1;
@@ -147,7 +148,7 @@ public class Gihun456 {
                             System.out.println(currentTask.toString());
                             System.out.println(String.format(
                                 "Now you have %d tasks in the list.", storage.size()));
-                            System.out.println();
+                            System.out.println(SEP);
                             break;
                         }
                     }
@@ -158,11 +159,11 @@ public class Gihun456 {
                     }
 
                     default:
-                        throw new GihunException("Command not supported.");
+                        throw new GihunException("Operation not supported.");
                 }
             } catch (GihunException ge) {
                 printError(ge.getMessage());
-                System.out.println();
+                System.out.println(SEP);
             } catch (Exception e) {
                 System.out.println("An unexpected error occurred. Please try again.");
                 e.printStackTrace(System.err);
@@ -172,8 +173,6 @@ public class Gihun456 {
     }
 
     private static void printError(String msg) {
-        System.out.println("____________________________________________________________");
         System.out.println("ERROR: " + msg);
-        System.out.println("____________________________________________________________");
     }
 }
