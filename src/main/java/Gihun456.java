@@ -25,7 +25,13 @@ public class Gihun456 {
         System.out.println(SEP);
         Scanner sc = new Scanner(System.in);
 
-        ArrayList<Task> storage = new ArrayList<>();
+        ArrayList<Task> storage;
+        try {
+            storage = new ArrayList<>(Storage.loadTasks());
+        } catch (GihunException ge) {
+            printError(ge.getMessage());
+            return;
+        }
 
         while (sc.hasNextLine()) {
             String input = sc.nextLine();
@@ -45,6 +51,7 @@ public class Gihun456 {
                         System.out.println(ADD_TASK);
                         Task newTask = new Todo(arguments);
                         storage.add(newTask);
+                        Storage.saveTasks(storage);
 
                         System.out.println(newTask.toString());
                         System.out.println(String.format(
@@ -65,6 +72,7 @@ public class Gihun456 {
                         System.out.println(ADD_TASK);
                         Task newTask = new Deadline(taskName, dueDate);
                         storage.add(newTask);
+                        Storage.saveTasks(storage);
 
                         System.out.println(newTask.toString());
                         System.out.println(String.format(
@@ -89,6 +97,7 @@ public class Gihun456 {
                         System.out.println(ADD_TASK);
                         Task newTask = new Event(taskName, startDate, endDate);
                         storage.add(newTask);
+                        Storage.saveTasks(storage);
 
                         System.out.println(newTask.toString());
                         System.out.println(String.format(
@@ -115,7 +124,8 @@ public class Gihun456 {
                     case MARK: {
                         int toMark = Integer.parseInt(arguments) - 1;
                         Task currentTask = storage.get(toMark);
-                        currentTask.markTaskAsDone();
+                        currentTask.markAsDone();
+                        Storage.saveTasks(storage);
 
                         System.out.println(MARK_TASK);
                         System.out.println(currentTask.toString());
@@ -126,7 +136,8 @@ public class Gihun456 {
                     case UNMARK: {
                         int toUnmark = Integer.parseInt(arguments) - 1;
                         Task currentTask = storage.get(toUnmark);
-                        currentTask.markTaskAsNotDone();
+                        currentTask.markAsNotDone();
+                        Storage.saveTasks(storage);
 
                         System.out.println(UNMARK_TASK);
                         System.out.println(currentTask.toString());
@@ -143,6 +154,7 @@ public class Gihun456 {
                             int toDelete = Integer.parseInt(arguments) - 1;
                             Task currentTask = storage.get(toDelete);
                             storage.remove(toDelete);
+                            Storage.saveTasks(storage);
 
                             System.out.println(REMOVE_TASK);
                             System.out.println(currentTask.toString());
