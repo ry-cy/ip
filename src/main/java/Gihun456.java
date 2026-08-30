@@ -48,11 +48,11 @@ public class Gihun456 {
                         if (arguments.trim().isEmpty()) {
                             throw new GihunException("The description of a todo cannot be empty.");
                         }
-                        System.out.println(ADD_TASK);
                         Task newTask = new Todo(arguments);
                         storage.add(newTask);
                         Storage.saveTasks(storage);
 
+                        System.out.println(ADD_TASK);
                         System.out.println(newTask.toString());
                         System.out.println(String.format(
                             "Now you have %d tasks in the list.", storage.size()));
@@ -69,11 +69,11 @@ public class Gihun456 {
                         String dueDate =
                                 arguments.substring(byIndex + 3).trim();
 
-                        System.out.println(ADD_TASK);
                         Task newTask = new Deadline(taskName, dueDate);
                         storage.add(newTask);
                         Storage.saveTasks(storage);
 
+                        System.out.println(ADD_TASK);
                         System.out.println(newTask.toString());
                         System.out.println(String.format(
                             "Now you have %d tasks in the list.", storage.size()));
@@ -94,11 +94,11 @@ public class Gihun456 {
                         String endDate =
                                 arguments.substring(toIndex + 3).trim();
 
-                        System.out.println(ADD_TASK);
                         Task newTask = new Event(taskName, startDate, endDate);
                         storage.add(newTask);
                         Storage.saveTasks(storage);
 
+                        System.out.println(ADD_TASK);
                         System.out.println(newTask.toString());
                         System.out.println(String.format(
                             "Now you have %d tasks in the list.", storage.size()));
