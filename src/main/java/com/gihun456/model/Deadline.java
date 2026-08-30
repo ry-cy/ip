@@ -1,46 +1,42 @@
+package com.gihun456.model;
+
+import com.gihun456.GihunException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
-public class Event extends Task {
+public class Deadline extends Task {
     private static final DateTimeFormatter DISPLAY_FORMATTER =
             DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
     private static final DateTimeFormatter STORAGE_FORMATTER =
             DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    protected LocalDateTime startDate;
-    protected LocalDateTime endDate;
+    protected LocalDateTime dueDate;
 
-    public Event(String taskName, String startDateText, String endDateText) throws GihunException {
+    public Deadline(String taskName, String dueDateText) throws GihunException {
         super(taskName);
-        this.startDate = parseDateTime(startDateText);
-        this.endDate = parseDateTime(endDateText);
+        this.dueDate = parseDueDate(dueDateText);
     }
 
-    public Event(String taskName, LocalDateTime startDate, LocalDateTime endDate) {
+    public Deadline(String taskName, LocalDateTime dueDate) {
         super(taskName);
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.dueDate = dueDate;
     }
 
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
+    public LocalDateTime getDueDate() {
+        return dueDate;
     }
 
     public static String formatForStorage(LocalDateTime dateTime) {
         return STORAGE_FORMATTER.format(dateTime);
     }
 
-    private static LocalDateTime parseDateTime(String dateText) throws GihunException {
-        String trimmed = dateText.trim();
+    private static LocalDateTime parseDueDate(String dueDateText) throws GihunException {
+        String trimmed = dueDateText.trim();
         if (trimmed.isEmpty()) {
-            throw new GihunException("Event date cannot be empty.");
+            throw new GihunException("Deadline date cannot be empty.");
         }
 
         trimmed = trimmed.replaceAll("(?i)(\\d{1,2}:\\d{2})\\s*(am|pm)\\b", "$1 $2");
@@ -79,7 +75,6 @@ public class Event extends Task {
                 DateTimeFormatter.ISO_LOCAL_DATE_TIME
         };
 
-
         for (DateTimeFormatter formatter : dateTimeFormatters) {
             try {
                 return LocalDateTime.parse(trimmed, formatter);
@@ -109,13 +104,11 @@ public class Event extends Task {
         }
 
         throw new GihunException(
-                "Invalid event date format. Please use yyyy-MM-dd, dd-MM-yyyy, d/M/yyyy, or d/M/yyyy HHmm.");
+                "Invalid deadline format. Please use yyyy-MM-dd, dd-MM-yyyy, d/M/yyyy, or d/M/yyyy HHmm.");
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString()
-                + " (from: " + DISPLAY_FORMATTER.format(startDate)
-                + " to: " + DISPLAY_FORMATTER.format(endDate) + ")";
+        return "[D]" + super.toString() + " (by: " + DISPLAY_FORMATTER.format(dueDate) + ")";
     }
 }

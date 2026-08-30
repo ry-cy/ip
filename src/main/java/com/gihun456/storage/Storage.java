@@ -1,3 +1,10 @@
+package com.gihun456.storage;
+
+import com.gihun456.GihunException;
+import com.gihun456.model.Task;
+import com.gihun456.model.Todo;
+import com.gihun456.model.Deadline;
+import com.gihun456.model.Event;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -138,6 +145,6 @@ public class Storage {
             }
         }
 
-        return type + " | " + task.getStatusIcon() + " | " + task.taskName + details;
+        return type + " | " + task.getStatusIcon() + " | " + task.getTaskName() + details;
     }
 }

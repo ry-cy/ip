@@ -1,5 +1,7 @@
+package com.gihun456.model;
+
 public class Todo extends Task {
-    protected Todo(String taskName) {
+    public Todo(String taskName) {
         super(taskName);
     }
 

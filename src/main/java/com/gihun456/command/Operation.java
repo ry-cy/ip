@@ -1,3 +1,7 @@
+package com.gihun456.command;
+
+import com.gihun456.GihunException;
+
 public enum Operation {
     TODO("todo"),
     DEADLINE("deadline"),
@@ -10,7 +14,7 @@ public enum Operation {
 
     private final String operationStr;
 
-    private Operation(String operationStr) {
+    Operation(String operationStr) {
         this.operationStr = operationStr;
     }
 
