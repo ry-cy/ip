@@ -60,6 +60,14 @@ public class Event extends Task {
                 DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"),
                 DateTimeFormatter.ofPattern("dd/MM/yyyy h a", Locale.US),
                 DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm a", Locale.US),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd h a", Locale.US),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd h:mm a", Locale.US),
+                DateTimeFormatter.ofPattern("yyyy/M/d HHmm"),
+                DateTimeFormatter.ofPattern("yyyy/M/d HH:mm"),
+                DateTimeFormatter.ofPattern("yyyy/M/d h a", Locale.US),
+                DateTimeFormatter.ofPattern("yyyy/M/d h:mm a", Locale.US),
                 DateTimeFormatter.ofPattern("d/M/yy HHmm"),
                 DateTimeFormatter.ofPattern("d/M/yy HH:mm"),
                 DateTimeFormatter.ofPattern("d/M/yy h a", Locale.US),
@@ -70,6 +78,7 @@ public class Event extends Task {
                 DateTimeFormatter.ofPattern("dd-MM-yy h:mm a", Locale.US),
                 DateTimeFormatter.ISO_LOCAL_DATE_TIME
         };
+
 
         for (DateTimeFormatter formatter : dateTimeFormatters) {
             try {
@@ -83,10 +92,11 @@ public class Event extends Task {
                 DateTimeFormatter.ofPattern("d/M/yyyy"),
                 DateTimeFormatter.ofPattern("dd/MM/yyyy"),
                 DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+                DateTimeFormatter.ofPattern("yyyy/M/d"),
                 DateTimeFormatter.ofPattern("d/M/yy"),
                 DateTimeFormatter.ofPattern("dd/MM/yy"),
                 DateTimeFormatter.ofPattern("dd-MM-yy"),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd"),
                 DateTimeFormatter.ISO_LOCAL_DATE
         };
 
