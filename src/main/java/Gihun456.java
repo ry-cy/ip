@@ -1,188 +1,122 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Gihun456 {
-    static final String BANNER = """
-                          ____ _ _                 _  _  ____   __   
-                         / ___(_) |__  _   _ _ __ | || || ___| / /_  
-                        | |  _| | '_ \\| | | | '_ \\| || ||___ \\| '_ \\ 
-                        | |_| | | | | | |_| | | | |__   _|__) | (_) |
-                         \\____|_|_| |_|\\__,_|_| |_|  |_||____/ \\___/ 
-                        """;
+    private final Ui ui;
+    private final TaskList tasks;
+    private final Parser parser;
+    private final Storage storage;
 
-    static final String GREETING = "Hello! I'm Gihun456.\nWhat can I do for you?";
-    static final String FAREWELL = "Bye. Hope to see you again soon!";
-    static final String SEP = "____________________________________________________________";
+    public Gihun456(String filePath) {
+        this.ui = new Ui();
+        this.tasks = new TaskList();
+        this.parser = new Parser();
+        this.storage = new Storage(filePath);
+    }
 
-    static final String LIST_TASKS = "Here are the tasks in your list:";
-    static final String ADD_TASK = "Got it. I've added this task:";
-    static final String REMOVE_TASK = "Noted. I've removed this task:";
-    static final String MARK_TASK = "Nice! I've marked this task as done:";
-    static final String UNMARK_TASK = "OK, I've marked this task as not done yet:";
     public static void main(String[] args) {
-        System.out.println(BANNER);
-        System.out.println(GREETING);
-        System.out.println(SEP);
+        Gihun456 app = new Gihun456("data/Gihun456.txt");
+        app.run();
+    }
+
+    public void run() {
+        ui.showGreeting();
         Scanner sc = new Scanner(System.in);
 
-        ArrayList<Task> storage;
         try {
-            storage = new ArrayList<>(Storage.loadTasks());
+            tasks.addAll(storage.load());
         } catch (GihunException ge) {
-            printError(ge.getMessage());
+            ui.showError(ge.getMessage());
             return;
         }
 
         while (sc.hasNextLine()) {
             String input = sc.nextLine();
 
-            String[] parts = input.split(" ", 2);
-
-            String commandInput = parts[0];
-            String arguments = parts.length > 1 ? parts[1] : "";
-
             try {
-                Operation operation = Operation.fromInput(commandInput);
+                Parser.ParsedInput parsedInput = parser.parse(input);
+                Operation operation = parsedInput.getOperation();
+                String arguments = parsedInput.getArguments();
+
                 switch (operation) {
                     case TODO: {
                         if (arguments.trim().isEmpty()) {
                             throw new GihunException("The description of a todo cannot be empty.");
                         }
                         Task newTask = new Todo(arguments);
-                        storage.add(newTask);
-                        Storage.saveTasks(storage);
-
-                        System.out.println(ADD_TASK);
-                        System.out.println(newTask.toString());
-                        System.out.println(String.format(
-                            "Now you have %d tasks in the list.", storage.size()));
-                        System.out.println(SEP);
+                        tasks.add(newTask);
+                        storage.save(tasks.asList());
+                        ui.showTaskAdded(newTask, tasks.size());
                         break;
                     }
 
                     case DEADLINE: {
-                        int byIndex = arguments.indexOf("/by");
-
-                        String taskName =
-                                arguments.substring(0, byIndex).trim();
-
-                        String dueDate =
-                                arguments.substring(byIndex + 3).trim();
-
-                        Task newTask = new Deadline(taskName, dueDate);
-                        storage.add(newTask);
-                        Storage.saveTasks(storage);
-
-                        System.out.println(ADD_TASK);
-                        System.out.println(newTask.toString());
-                        System.out.println(String.format(
-                            "Now you have %d tasks in the list.", storage.size()));
-                        System.out.println(SEP);
+                        Task newTask = parser.parseDeadline(arguments);
+                        tasks.add(newTask);
+                        storage.save(tasks.asList());
+                        ui.showTaskAdded(newTask, tasks.size());
                         break;
                     }
 
                     case EVENT: {
-                        int fromIndex = arguments.indexOf("/from");
-                        int toIndex = arguments.indexOf("/to");
-
-                        String taskName =
-                                arguments.substring(0, fromIndex).trim();
-
-                        String startDate =
-                                arguments.substring(fromIndex + 5, toIndex).trim();
-
-                        String endDate =
-                                arguments.substring(toIndex + 3).trim();
-
-                        Task newTask = new Event(taskName, startDate, endDate);
-                        storage.add(newTask);
-                        Storage.saveTasks(storage);
-
-                        System.out.println(ADD_TASK);
-                        System.out.println(newTask.toString());
-                        System.out.println(String.format(
-                            "Now you have %d tasks in the list.", storage.size()));
-                        System.out.println(SEP);
+                        Task newTask = parser.parseEvent(arguments);
+                        tasks.add(newTask);
+                        storage.save(tasks.asList());
+                        ui.showTaskAdded(newTask, tasks.size());
                         break;
                     }
 
                     case LIST:
-                        if (storage.isEmpty()) {
-                            System.out.println("Storage empty");
-                            System.out.println(SEP);
-                            break;
-                        } else {
-                            System.out.println(LIST_TASKS);
-                            for (int i = 0; i < storage.size(); i++) {
-                                Task currentTask = storage.get(i);
-                                System.out.println((i + 1) + ". " + currentTask.toString());
-                            }
-                            System.out.println(SEP);
+                        if (tasks.isEmpty()) {
+                            ui.showEmptyList();
                             break;
                         }
-                    
-                    case MARK: {
-                        int toMark = Integer.parseInt(arguments) - 1;
-                        Task currentTask = storage.get(toMark);
-                        currentTask.markAsDone();
-                        Storage.saveTasks(storage);
+                        ui.showTaskList(tasks.asList());
+                        break;
 
-                        System.out.println(MARK_TASK);
-                        System.out.println(currentTask.toString());
-                        System.out.println(SEP);
+                    case MARK: {
+                        int toMark = tasks.getValidIndex(arguments);
+                        Task currentTask = tasks.get(toMark);
+                        tasks.markTask(toMark);
+                        storage.save(tasks.asList());
+                        ui.showTaskMarked(currentTask);
                         break;
                     }
-                    
-                    case UNMARK: {
-                        int toUnmark = Integer.parseInt(arguments) - 1;
-                        Task currentTask = storage.get(toUnmark);
-                        currentTask.markAsNotDone();
-                        Storage.saveTasks(storage);
 
-                        System.out.println(UNMARK_TASK);
-                        System.out.println(currentTask.toString());
-                        System.out.println(SEP);
+                    case UNMARK: {
+                        int toUnmark = tasks.getValidIndex(arguments);
+                        Task currentTask = tasks.get(toUnmark);
+                        tasks.unmarkTask(toUnmark);
+                        storage.save(tasks.asList());
+                        ui.showTaskUnmarked(currentTask);
                         break;
                     }
 
                     case DELETE: {
-                        if (storage.isEmpty()) {
-                            System.out.println("Storage empty");
-                            System.out.println(SEP);
-                            break;
-                        } else {
-                            int toDelete = Integer.parseInt(arguments) - 1;
-                            Task currentTask = storage.get(toDelete);
-                            storage.remove(toDelete);
-                            Storage.saveTasks(storage);
-
-                            System.out.println(REMOVE_TASK);
-                            System.out.println(currentTask.toString());
-                            System.out.println(String.format(
-                                "Now you have %d tasks in the list.", storage.size()));
-                            System.out.println(SEP);
+                        if (tasks.isEmpty()) {
+                            ui.showEmptyList();
                             break;
                         }
+                        int toDelete = tasks.getValidIndex(arguments);
+                        Task currentTask = tasks.get(toDelete);
+                        tasks.remove(toDelete);
+                        storage.save(tasks.asList());
+                        ui.showTaskRemoved(currentTask, tasks.size());
+                        break;
                     }
 
                     case BYE: {
-                        System.out.println(FAREWELL);
+                        ui.showFarewell();
                         return;
                     }
-
                 }
             } catch (GihunException ge) {
-                printError(ge.getMessage());
-                System.out.println(SEP);
+                ui.showError(ge.getMessage());
+                ui.showLine();
             } catch (Exception e) {
                 System.out.println("An unexpected error occurred. Please try again.");
                 e.printStackTrace(System.err);
                 System.out.println();
             }
         }
-    }
-
-    private static void printError(String msg) {
-        System.out.println("ERROR: " + msg);
     }
 }

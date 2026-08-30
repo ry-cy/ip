@@ -10,7 +10,20 @@ import java.util.List;
  * Persists the current task list to the application's data file.
  */
 public class Storage {
-    private static final Path TASK_FILE = Path.of("data", "Gihun456.txt");
+    private static final Path DEFAULT_TASK_FILE = Path.of("data", "Gihun456.txt");
+    private final Path taskFile;
+
+    public Storage() {
+        this(DEFAULT_TASK_FILE);
+    }
+
+    public Storage(Path filePath) {
+        this.taskFile = filePath;
+    }
+
+    public Storage(String filePath) {
+        this(Path.of(filePath));
+    }
 
     /**
      * Writes all tasks to disk, replacing the previous snapshot.
@@ -18,16 +31,16 @@ public class Storage {
      * @param tasks The current task list.
      * @throws GihunException If the data directory or file cannot be written.
      */
-    public static void saveTasks(List<Task> tasks) throws GihunException {
+    public void save(List<Task> tasks) throws GihunException {
         try {
-            Files.createDirectories(TASK_FILE.getParent());
+            Files.createDirectories(taskFile.getParent());
 
             StringBuilder contents = new StringBuilder();
             for (Task task : tasks) {
                 contents.append(formatTask(task)).append(System.lineSeparator());
             }
             Files.writeString(
-                    TASK_FILE,
+                    taskFile,
                     contents.toString(),
                     StandardCharsets.UTF_8);
         } catch (IOException e) {
@@ -41,14 +54,14 @@ public class Storage {
      * @return List of tasks, empty list if previous snapshot does not exist.
      * @throws GihunException If the task could not be loaded.
      */
-    public static List<Task> loadTasks() throws GihunException {
+    public List<Task> load() throws GihunException {
         List<Task> tasks = new ArrayList<>();
 
-        if (!Files.exists(TASK_FILE)) {
+        if (!Files.exists(taskFile)) {
             return tasks;
         }
 
-        try (BufferedReader reader = Files.newBufferedReader(TASK_FILE, StandardCharsets.UTF_8)) {
+        try (BufferedReader reader = Files.newBufferedReader(taskFile, StandardCharsets.UTF_8)) {
             String line;
 
             while ((line = reader.readLine()) != null) {
@@ -107,7 +120,7 @@ public class Storage {
         }
     }
 
-    private static String formatTask(Task task) {
+    private String formatTask(Task task) {
         String type;
         String details = "";
         switch (task) {
