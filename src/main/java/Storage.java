@@ -97,14 +97,16 @@ public class Storage {
     private static String formatTask(Task task) {
         String type;
         String details = "";
-        if (task instanceof Deadline deadline) {
-            type = "D";
-            details = " | " + deadline.dueDate;
-        } else if (task instanceof Event event) {
-            type = "E";
-            details = " | " + event.startDate + " | " + event.endDate;
-        } else {
-            type = "T";
+        switch (task) {
+            case Deadline deadline -> {
+                type = "D";
+                details = " | " + deadline.dueDate;
+            }
+            case Event event -> {
+                type = "E";
+                details = " | " + event.startDate + " | " + event.endDate;
+            }
+            default -> type = "T";
         }
 
         return type + " | " + task.getStatusIcon() + " | " + task.taskName + details;
