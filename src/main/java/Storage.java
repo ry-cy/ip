@@ -53,6 +53,9 @@ public class Storage {
 
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\|");
+                if (parts.length < 3) {
+                    continue;
+                }
 
                 String type = parts[0].trim();
                 boolean isDone = parts[1].trim().equals("X");
@@ -60,25 +63,35 @@ public class Storage {
 
                 Task task;
 
-                switch (type) {
-                    case "T":
-                        task = new Todo(description);
-                        break;
+                try {
+                    switch (type) {
+                        case "T":
+                            task = new Todo(description);
+                            break;
 
-                    case "D":
-                        String deadline = parts[3].trim();
-                        task = new Deadline(description, deadline);
-                        break;
+                        case "D":
+                            if (parts.length < 4) {
+                                continue;
+                            }
+                            String deadline = parts[3].trim();
+                            task = new Deadline(description, deadline);
+                            break;
 
-                    case "E":
-                        String eventStart = parts[3].trim();
-                        String eventEnd = parts[4].trim();
+                        case "E":
+                            if (parts.length < 5) {
+                                continue;
+                            }
+                            String eventStart = parts[3].trim();
+                            String eventEnd = parts[4].trim();
 
-                        task = new Event(description, eventStart, eventEnd);
-                        break;
+                            task = new Event(description, eventStart, eventEnd);
+                            break;
 
-                    default:
-                        continue;
+                        default:
+                            continue;
+                    }
+                } catch (GihunException e) {
+                    continue;
                 }
 
                 if (isDone) {
@@ -97,14 +110,19 @@ public class Storage {
     private static String formatTask(Task task) {
         String type;
         String details = "";
-        if (task instanceof Deadline deadline) {
-            type = "D";
-            details = " | " + deadline.dueDate;
-        } else if (task instanceof Event event) {
-            type = "E";
-            details = " | " + event.startDate + " | " + event.endDate;
-        } else {
-            type = "T";
+        switch (task) {
+            case Deadline deadline -> {
+                type = "D";
+                details = " | " + Deadline.formatForStorage(deadline.getDueDate());
+            }
+            case Event event -> {
+                type = "E";
+                details = " | " + Event.formatForStorage(event.getStartDate())
+                        + " | " + Event.formatForStorage(event.getEndDate());
+            }
+            default -> {
+                type = "T";
+            }
         }
 
         return type + " | " + task.getStatusIcon() + " | " + task.taskName + details;
