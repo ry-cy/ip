@@ -131,6 +131,37 @@ public class TaskListTest {
     }
 
     @Test
+    public void getMatchedTasks_blankKeyword_throwsGihunException() {
+        TaskList taskList = new TaskList();
+        taskList.add(new Todo("Read book"));
+
+        assertThrows(GihunException.class, () -> taskList.getMatchedTasks("   "));
+    }
+
+    @Test
+    public void getMatchedTasks_caseInsensitiveKeyword_returnsMatchingTasks() {
+        TaskList taskList = new TaskList();
+        Todo readBook = new Todo("Read book");
+        Todo writeCode = new Todo("Write code");
+        Todo reviewNotes = new Todo("Review notes");
+        taskList.addAll(List.of(readBook, writeCode, reviewNotes));
+
+        List<Task> matchedTasks = assertDoesNotThrow(() -> taskList.getMatchedTasks("BOOK"));
+
+        assertEquals(List.of(readBook), matchedTasks);
+    }
+
+    @Test
+    public void getMatchedTasks_noMatches_returnsEmptyList() {
+        TaskList taskList = new TaskList();
+        taskList.addAll(List.of(new Todo("Read book"), new Todo("Write code")));
+
+        List<Task> matchedTasks = assertDoesNotThrow(() -> taskList.getMatchedTasks("travel"));
+
+        assertTrue(matchedTasks.isEmpty());
+    }
+
+    @Test
     public void asList_returnsCopyOfTasks() {
         TaskList taskList = new TaskList();
         Todo first = new Todo("Read book");
