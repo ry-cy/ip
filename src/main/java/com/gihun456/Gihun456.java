@@ -9,6 +9,7 @@ import com.gihun456.model.Deadline;
 import com.gihun456.model.Event;
 import com.gihun456.storage.Storage;
 import com.gihun456.ui.Ui;
+import java.util.List;
 import java.util.Scanner;
 
 public class Gihun456 {
@@ -53,6 +54,7 @@ public class Gihun456 {
                         if (arguments.trim().isEmpty()) {
                             throw new GihunException("The description of a todo cannot be empty.");
                         }
+
                         Task newTask = new Todo(arguments);
                         tasks.add(newTask);
                         storage.save(tasks.asList());
@@ -81,7 +83,23 @@ public class Gihun456 {
                             ui.showEmptyList();
                             break;
                         }
-                        ui.showTaskList(tasks.asList());
+
+                        ui.showTaskList(tasks.asList(), false);
+                        break;
+                    
+                    case FIND:
+                        if (tasks.isEmpty()) {
+                            ui.showEmptyList();
+                            break;
+                        }
+
+                        List<Task> matchingTasks = tasks.getMatchedTasks(arguments);
+                        if (matchingTasks.isEmpty()) {
+                            ui.showNoMatchingTasks();
+                            break;
+                        }
+
+                        ui.showTaskList(matchingTasks, true);
                         break;
 
                     case MARK: {
@@ -107,6 +125,7 @@ public class Gihun456 {
                             ui.showEmptyList();
                             break;
                         }
+
                         int toDelete = tasks.getValidIndex(arguments);
                         Task currentTask = tasks.get(toDelete);
                         tasks.remove(toDelete);

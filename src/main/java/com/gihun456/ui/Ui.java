@@ -20,6 +20,8 @@ public class Ui {
     private static final String SEP = "____________________________________________________________";
 
     private static final String LIST_TASKS = "Here are the tasks in your list:";
+    private static final String LIST_MATCHING_TASKS = "Here are the matching tasks in your list:";
+    private static final String NO_MATCHING_TASKS = "No matching tasks found.";
     private static final String ADD_TASK = "Got it. I've added this task:";
     private static final String REMOVE_TASK = "Noted. I've removed this task:";
     private static final String MARK_TASK = "Nice! I've marked this task as done:";
@@ -48,8 +50,18 @@ public class Ui {
         showLine();
     }
 
-    public void showTaskList(List<Task> tasks) {
-        System.out.println(LIST_TASKS);
+    public void showNoMatchingTasks() {
+        System.out.println(NO_MATCHING_TASKS);
+        showLine();
+    }
+
+    public void showTaskList(List<Task> tasks, boolean isMatching) {
+        if (isMatching) {
+            System.out.println(LIST_MATCHING_TASKS);
+        } else {
+            System.out.println(LIST_TASKS);
+        }
+
         for (int i = 0; i < tasks.size(); i++) {
             Task currentTask = tasks.get(i);
             System.out.println((i + 1) + ". " + currentTask.toString());

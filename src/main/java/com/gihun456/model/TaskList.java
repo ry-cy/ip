@@ -3,6 +3,7 @@ package com.gihun456.model;
 import com.gihun456.GihunException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Encapsulates the in-memory list of tasks and the operations that act on it.
@@ -52,6 +53,24 @@ public class TaskList {
         }
 
         return zeroBasedIndex;
+    }
+
+    public List<Task> getMatchedTasks(String matchingKey) throws GihunException {
+        if (matchingKey == null || matchingKey.trim().isEmpty()) {
+            throw new GihunException("The keyword cannot be empty.");
+        }
+
+        String normalizedKey = matchingKey.trim().toLowerCase();
+        List<Task> result = new ArrayList<>();
+
+        for (Task task : tasks) {
+            String taskName = task.getTaskName();
+            if (taskName.toLowerCase().contains(normalizedKey)) {
+                result.add(task);
+            }
+        }
+
+        return result;
     }
 
     public void markTask(int index) {

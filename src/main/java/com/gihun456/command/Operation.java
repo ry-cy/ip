@@ -7,6 +7,7 @@ public enum Operation {
     DEADLINE("deadline"),
     EVENT("event"),
     LIST("list"),
+    FIND("find"),
     MARK("mark"),
     UNMARK("unmark"),
     DELETE("delete"),
