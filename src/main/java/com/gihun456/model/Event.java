@@ -7,35 +7,69 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
+/**
+ * Represents a task that spans a start date and end date.
+ */
 public class Event extends Task {
     private static final DateTimeFormatter DISPLAY_FORMATTER =
             DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
     private static final DateTimeFormatter STORAGE_FORMATTER =
             DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    protected LocalDateTime startDate;
-    protected LocalDateTime endDate;
+    private final LocalDateTime startDate;
+    private final LocalDateTime endDate;
 
+    /**
+     * Creates an event task from raw user input.
+     *
+     * @param taskName Description of the event.
+     * @param startDateText Start date text.
+     * @param endDateText End date text.
+     * @throws GihunException If either date is invalid.
+     */
     public Event(String taskName, String startDateText, String endDateText) throws GihunException {
         super(taskName);
         this.startDate = parseDateTime(startDateText);
         this.endDate = parseDateTime(endDateText);
     }
 
+    /**
+     * Creates an event task from date-time objects.
+     *
+     * @param taskName Description of the event.
+     * @param startDate Start date-time.
+     * @param endDate End date-time.
+     */
     public Event(String taskName, LocalDateTime startDate, LocalDateTime endDate) {
         super(taskName);
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
+    /**
+     * Returns the event start date-time.
+     *
+     * @return Event start timestamp.
+     */
     public LocalDateTime getStartDate() {
         return startDate;
     }
 
+    /**
+     * Returns the event end date-time.
+     *
+     * @return Event end timestamp.
+     */
     public LocalDateTime getEndDate() {
         return endDate;
     }
 
+    /**
+     * Formats a date-time for storage.
+     *
+     * @param dateTime Date-time to format.
+     * @return ISO date-time string.
+     */
     public static String formatForStorage(LocalDateTime dateTime) {
         return STORAGE_FORMATTER.format(dateTime);
     }

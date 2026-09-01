@@ -11,12 +11,22 @@ import com.gihun456.storage.Storage;
 import com.gihun456.ui.Ui;
 import java.util.Scanner;
 
+/**
+ * Entry point for the Gihun456 task application.
+ */
 public class Gihun456 {
+    private static final String DEFAULT_DATA_FILE = "data/Gihun456.txt";
+
     private final Ui ui;
     private final TaskList tasks;
     private final Parser parser;
     private final Storage storage;
 
+    /**
+     * Creates an application instance backed by the given data file.
+     *
+     * @param filePath Path to the persistent task storage file.
+     */
     public Gihun456(String filePath) {
         this.ui = new Ui();
         this.tasks = new TaskList();
@@ -24,14 +34,22 @@ public class Gihun456 {
         this.storage = new Storage(filePath);
     }
 
+    /**
+     * Starts the application from the default data file.
+     *
+     * @param args Command-line arguments ignored by the program.
+     */
     public static void main(String[] args) {
-        Gihun456 app = new Gihun456("data/Gihun456.txt");
+        Gihun456 app = new Gihun456(DEFAULT_DATA_FILE);
         app.run();
     }
 
+    /**
+     * Runs the application's main command loop.
+     */
     public void run() {
         ui.showGreeting();
-        Scanner sc = new Scanner(System.in);
+        final Scanner scanner = new Scanner(System.in);
 
         try {
             tasks.addAll(storage.load());
@@ -40,8 +58,8 @@ public class Gihun456 {
             return;
         }
 
-        while (sc.hasNextLine()) {
-            String input = sc.nextLine();
+        while (scanner.hasNextLine()) {
+            String input = scanner.nextLine();
 
             try {
                 Parser.ParsedInput parsedInput = parser.parse(input);
