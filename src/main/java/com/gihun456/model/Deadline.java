@@ -8,7 +8,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 /**
- * Child class of parent Task object, adds support for tracking deadlines of a task.
+ * Represents a task that must be completed by a specific date or time.
  */
 public class Deadline extends Task {
     private static final DateTimeFormatter DISPLAY_FORMATTER =
@@ -16,22 +16,46 @@ public class Deadline extends Task {
     private static final DateTimeFormatter STORAGE_FORMATTER =
             DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    protected LocalDateTime dueDate;
+    private final LocalDateTime dueDate;
 
+    /**
+     * Creates a deadline task from a user-provided date-time text.
+     *
+     * @param taskName Description of the task.
+     * @param dueDateText Date-time string entered by the user.
+     * @throws GihunException If the date format is invalid.
+     */
     public Deadline(String taskName, String dueDateText) throws GihunException {
         super(taskName);
         this.dueDate = parseDueDate(dueDateText);
     }
 
+    /**
+     * Creates a deadline task from a Java date-time object.
+     *
+     * @param taskName Description of the task.
+     * @param dueDate Exact deadline date-time.
+     */
     public Deadline(String taskName, LocalDateTime dueDate) {
         super(taskName);
         this.dueDate = dueDate;
     }
 
+    /**
+     * Returns the deadline date and time.
+     *
+     * @return Deadline timestamp.
+     */
     public LocalDateTime getDueDate() {
         return dueDate;
     }
 
+    /**
+     * Formats a date-time for storage.
+     *
+     * @param dateTime Date-time to format.
+     * @return ISO date-time string.
+     */
     public static String formatForStorage(LocalDateTime dateTime) {
         return STORAGE_FORMATTER.format(dateTime);
     }

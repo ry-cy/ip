@@ -1,10 +1,14 @@
 package com.gihun456.model;
 
 /**
- * Child class of parent Task object. 
- * Simple Todo representation without tracking of any date or time.
+ * Represents a task with no additional date information.
  */
 public class Todo extends Task {
+    /**
+     * Creates a todo task.
+     *
+     * @param taskName Description of the todo item.
+     */
     public Todo(String taskName) {
         super(taskName);
     }
