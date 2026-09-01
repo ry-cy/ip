@@ -71,15 +71,19 @@ public class Ui {
     }
 
     /**
-     * Prints all tasks in the list.
-     *
-     * @param tasks Tasks to display.
+     * Prints a message for the case where no matching tasks were found from the given keyword.
      */
     public void showNoMatchingTasks() {
         System.out.println(NO_MATCHING_TASKS);
         showLine();
     }
 
+    /**
+     * Prints all tasks in the list.
+     *
+     * @param tasks Tasks to display.
+     * @param isMatching Boolean to determine which header to print.
+     */
     public void showTaskList(List<Task> tasks, boolean isMatching) {
         if (isMatching) {
             System.out.println(LIST_MATCHING_TASKS);

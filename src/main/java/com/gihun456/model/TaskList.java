@@ -3,7 +3,6 @@ package com.gihun456.model;
 import com.gihun456.GihunException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Encapsulates the in-memory list of tasks and the operations that act on it.
@@ -92,6 +91,13 @@ public class TaskList {
         return zeroBasedIndex;
     }
 
+    /**
+     * Retrieves tasks with description matching a given keyword.
+     *
+     * @param matchingKey User input with a keyword to find matches.
+     * @return A list of tasks with matches to the given keyword.
+     * @throws GihunException If the keyword is empty.
+     */
     public List<Task> getMatchedTasks(String matchingKey) throws GihunException {
         if (matchingKey == null || matchingKey.trim().isEmpty()) {
             throw new GihunException("The keyword cannot be empty.");
@@ -110,6 +116,11 @@ public class TaskList {
         return result;
     }
 
+    /**
+     * Marks a task as done.
+     *
+     * @param index Zero-based index of the task to mark.
+     */
     public void markTask(int index) {
         tasks.get(index).markAsDone();
     }
