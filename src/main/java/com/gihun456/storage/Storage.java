@@ -127,6 +127,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Formats tasks for saving to disk.
+     * 
+     * @param task Task object to be formatted.
+     * @return String representation of formatted task, for writing to the file.
+     */
     private String formatTask(Task task) {
         String type;
         String details = "";

@@ -7,6 +7,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
+/**
+ * Child class of parent Task object, adds support for tracking deadlines of a task.
+ */
 public class Deadline extends Task {
     private static final DateTimeFormatter DISPLAY_FORMATTER =
             DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
@@ -33,6 +36,13 @@ public class Deadline extends Task {
         return STORAGE_FORMATTER.format(dateTime);
     }
 
+    /**
+     * Parses a string into a LocalDateTime object. Includes support for commonly used date formats.
+     * 
+     * @param dueDateText String of date with optional time.
+     * @return LocalDateTime representation of the dateTime.
+     * @throws GihunException If dueDateText is empty or the format is not supported.
+     */
     private static LocalDateTime parseDueDate(String dueDateText) throws GihunException {
         String trimmed = dueDateText.trim();
         if (trimmed.isEmpty()) {

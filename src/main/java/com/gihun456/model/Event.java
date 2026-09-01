@@ -7,6 +7,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
+/**
+ * Child class of parent Task object, adds support for tracking startDate and endDate of an Event.
+ */
 public class Event extends Task {
     private static final DateTimeFormatter DISPLAY_FORMATTER =
             DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
@@ -40,6 +43,13 @@ public class Event extends Task {
         return STORAGE_FORMATTER.format(dateTime);
     }
 
+    /**
+     * Parses a string into a LocalDateTime object. Includes support for commonly used date formats.
+     * 
+     * @param dateText String of date with optional time.
+     * @return LocalDateTime representation of the dateTime.
+     * @throws GihunException If dateText is empty or the format is not supported.
+     */
     private static LocalDateTime parseDateTime(String dateText) throws GihunException {
         String trimmed = dateText.trim();
         if (trimmed.isEmpty()) {
