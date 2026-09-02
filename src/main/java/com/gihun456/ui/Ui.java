@@ -6,9 +6,6 @@ import java.util.List;
 /**
  * Handles all user-visible output for the application.
  */
-/**
- * Handles all user-facing output for the application.
- */
 public class Ui {
     private static final String BANNER = """
                          ____ _ _                 _  _  ____   __   
