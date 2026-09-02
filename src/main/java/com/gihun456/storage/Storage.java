@@ -5,16 +5,19 @@ import com.gihun456.model.Task;
 import com.gihun456.model.Todo;
 import com.gihun456.model.Deadline;
 import com.gihun456.model.Event;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Persists the current task list to the application's data file.
+ * Saves the current task list to the application's data file.
  */
 public class Storage {
     private static final Path DEFAULT_TASK_FILE = Path.of("data", "Gihun456.txt");
