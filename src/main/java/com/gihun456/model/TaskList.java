@@ -1,9 +1,9 @@
 package com.gihun456.model;
 
-import com.gihun456.GihunException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.gihun456.GihunException;
 
 /**
  * Encapsulates the in-memory list of tasks and the operations that act on it.

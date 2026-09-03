@@ -15,6 +15,12 @@ public class Parser {
         private final Operation operation;
         private final String arguments;
 
+        /**
+         * Creates a parsed input value.
+         *
+         * @param operation Parsed operation.
+         * @param arguments Operation arguments.
+         */
         public ParsedInput(Operation operation, String arguments) {
             this.operation = operation;
             this.arguments = arguments;

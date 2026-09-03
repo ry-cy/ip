@@ -1,20 +1,18 @@
 package com.gihun456.storage;
 
-import com.gihun456.GihunException;
-import com.gihun456.model.Task;
-import com.gihun456.model.Todo;
-import com.gihun456.model.Deadline;
-import com.gihun456.model.Event;
-
 import java.io.BufferedReader;
 import java.io.IOException;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.gihun456.GihunException;
+import com.gihun456.model.Deadline;
+import com.gihun456.model.Event;
+import com.gihun456.model.Task;
+import com.gihun456.model.Todo;
 
 /**
  * Saves the current task list to the application's data file.
@@ -132,7 +130,7 @@ public class Storage {
 
     /**
      * Formats tasks for saving to disk.
-     * 
+     *
      * @param task Task object to be formatted.
      * @return String representation of formatted task, for writing to the file.
      */

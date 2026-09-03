@@ -1,13 +1,12 @@
 package com.gihun456.model;
 
-import com.gihun456.GihunException;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-
 import java.util.Locale;
+
+import com.gihun456.GihunException;
 
 /**
  * Represents a task that must be completed by a specific date or time.
@@ -64,7 +63,7 @@ public class Deadline extends Task {
 
     /**
      * Parses a string into a LocalDateTime object. Includes support for commonly used date formats.
-     * 
+     *
      * @param dueDateText String of date with optional time.
      * @return LocalDateTime representation of the dateTime.
      * @throws GihunException If dueDateText is empty or the format is not supported.
@@ -80,35 +79,35 @@ public class Deadline extends Task {
         trimmed = trimmed.toUpperCase(Locale.ROOT);
 
         DateTimeFormatter[] dateTimeFormatters = {
-                DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),
-                DateTimeFormatter.ofPattern("d/M/yyyy HH:mm"),
-                DateTimeFormatter.ofPattern("d/M/yyyy h a", Locale.US),
-                DateTimeFormatter.ofPattern("d/M/yyyy h:mm a", Locale.US),
-                DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm"),
-                DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"),
-                DateTimeFormatter.ofPattern("dd-MM-yyyy h a", Locale.US),
-                DateTimeFormatter.ofPattern("dd-MM-yyyy h:mm a", Locale.US),
-                DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm"),
-                DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"),
-                DateTimeFormatter.ofPattern("dd/MM/yyyy h a", Locale.US),
-                DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm a", Locale.US),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd h a", Locale.US),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd h:mm a", Locale.US),
-                DateTimeFormatter.ofPattern("yyyy/M/d HHmm"),
-                DateTimeFormatter.ofPattern("yyyy/M/d HH:mm"),
-                DateTimeFormatter.ofPattern("yyyy/M/d h a", Locale.US),
-                DateTimeFormatter.ofPattern("yyyy/M/d h:mm a", Locale.US),
-                DateTimeFormatter.ofPattern("d/M/yy HHmm"),
-                DateTimeFormatter.ofPattern("d/M/yy HH:mm"),
-                DateTimeFormatter.ofPattern("d/M/yy h a", Locale.US),
-                DateTimeFormatter.ofPattern("d/M/yy h:mm a", Locale.US),
-                DateTimeFormatter.ofPattern("dd-MM-yy HHmm"),
-                DateTimeFormatter.ofPattern("dd-MM-yy HH:mm"),
-                DateTimeFormatter.ofPattern("dd-MM-yy h a", Locale.US),
-                DateTimeFormatter.ofPattern("dd-MM-yy h:mm a", Locale.US),
-                DateTimeFormatter.ISO_LOCAL_DATE_TIME
+            DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),
+            DateTimeFormatter.ofPattern("d/M/yyyy HH:mm"),
+            DateTimeFormatter.ofPattern("d/M/yyyy h a", Locale.US),
+            DateTimeFormatter.ofPattern("d/M/yyyy h:mm a", Locale.US),
+            DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm"),
+            DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"),
+            DateTimeFormatter.ofPattern("dd-MM-yyyy h a", Locale.US),
+            DateTimeFormatter.ofPattern("dd-MM-yyyy h:mm a", Locale.US),
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm"),
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"),
+            DateTimeFormatter.ofPattern("dd/MM/yyyy h a", Locale.US),
+            DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm a", Locale.US),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd h a", Locale.US),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd h:mm a", Locale.US),
+            DateTimeFormatter.ofPattern("yyyy/M/d HHmm"),
+            DateTimeFormatter.ofPattern("yyyy/M/d HH:mm"),
+            DateTimeFormatter.ofPattern("yyyy/M/d h a", Locale.US),
+            DateTimeFormatter.ofPattern("yyyy/M/d h:mm a", Locale.US),
+            DateTimeFormatter.ofPattern("d/M/yy HHmm"),
+            DateTimeFormatter.ofPattern("d/M/yy HH:mm"),
+            DateTimeFormatter.ofPattern("d/M/yy h a", Locale.US),
+            DateTimeFormatter.ofPattern("d/M/yy h:mm a", Locale.US),
+            DateTimeFormatter.ofPattern("dd-MM-yy HHmm"),
+            DateTimeFormatter.ofPattern("dd-MM-yy HH:mm"),
+            DateTimeFormatter.ofPattern("dd-MM-yy h a", Locale.US),
+            DateTimeFormatter.ofPattern("dd-MM-yy h:mm a", Locale.US),
+            DateTimeFormatter.ISO_LOCAL_DATE_TIME
         };
 
         for (DateTimeFormatter formatter : dateTimeFormatters) {
@@ -120,15 +119,15 @@ public class Deadline extends Task {
         }
 
         DateTimeFormatter[] dateOnlyFormatters = {
-                DateTimeFormatter.ofPattern("d/M/yyyy"),
-                DateTimeFormatter.ofPattern("dd/MM/yyyy"),
-                DateTimeFormatter.ofPattern("dd-MM-yyyy"),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd"),
-                DateTimeFormatter.ofPattern("yyyy/M/d"),
-                DateTimeFormatter.ofPattern("d/M/yy"),
-                DateTimeFormatter.ofPattern("dd/MM/yy"),
-                DateTimeFormatter.ofPattern("dd-MM-yy"),
-                DateTimeFormatter.ISO_LOCAL_DATE
+            DateTimeFormatter.ofPattern("d/M/yyyy"),
+            DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+            DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+            DateTimeFormatter.ofPattern("yyyy/M/d"),
+            DateTimeFormatter.ofPattern("d/M/yy"),
+            DateTimeFormatter.ofPattern("dd/MM/yy"),
+            DateTimeFormatter.ofPattern("dd-MM-yy"),
+            DateTimeFormatter.ISO_LOCAL_DATE
         };
 
         for (DateTimeFormatter formatter : dateOnlyFormatters) {

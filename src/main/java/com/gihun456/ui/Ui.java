@@ -1,19 +1,19 @@
 package com.gihun456.ui;
 
-import com.gihun456.model.Task;
-
 import java.util.List;
+
+import com.gihun456.model.Task;
 
 /**
  * Handles all user-visible output for the application.
  */
 public class Ui {
     private static final String BANNER = """
-                         ____ _ _                 _  _  ____   __   
-                         / ___(_) |__  _   _ _ __ | || || ___| / /_  
-                        | |  _| | '_ \\| | | | '_ \\| || ||___ \\| '_ \\ 
+                         ____ _ _                 _  _  ____   __
+                         / ___(_) |__  _   _ _ __ | || || ___| / /_
+                        | |  _| | '_ \\| | | | '_ \\| || ||___ \\| '_ \\
                         | |_| | | | | | |_| | | | |__   _|__) | (_) |
-                         \\____|_|_| |_|\\__,_|_| |_|  |_||____/ \\___/ 
+                         \\____|_|_| |_|\\__,_|_| |_|  |_||____/ \\___/
                          """;
 
     private static final String GREETING = "Hello! I'm Gihun456.\nWhat can I do for you?";

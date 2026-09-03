@@ -1,17 +1,15 @@
 package com.gihun456;
 
+import java.util.List;
+import java.util.Scanner;
+
 import com.gihun456.command.Operation;
 import com.gihun456.command.Parser;
 import com.gihun456.model.Task;
 import com.gihun456.model.TaskList;
 import com.gihun456.model.Todo;
-import com.gihun456.model.Deadline;
-import com.gihun456.model.Event;
 import com.gihun456.storage.Storage;
 import com.gihun456.ui.Ui;
-
-import java.util.List;
-import java.util.Scanner;
 
 /**
  * Entry point for the Gihun456 task application.
@@ -105,7 +103,7 @@ public class Gihun456 {
 
                         ui.showTaskList(tasks.asList(), false);
                         break;
-                    
+
                     case FIND:
                         if (tasks.isEmpty()) {
                             ui.showEmptyList();
@@ -157,6 +155,8 @@ public class Gihun456 {
                         ui.showFarewell();
                         return;
                     }
+                    default:
+                        throw new GihunException("Unsupported operation.");
                 }
             } catch (GihunException ge) {
                 ui.showError(ge.getMessage());
