@@ -34,6 +34,10 @@ public class Gihun456 {
         this.storage = new Storage(filePath);
     }
 
+    public Gihun456() {
+        this(DEFAULT_DATA_FILE);
+    }
+
     /**
      * Starts the application from the default data file.
      *
@@ -167,5 +171,12 @@ public class Gihun456 {
                 System.out.println();
             }
         }
+    }
+
+    /**
+     * Generates a response for the user's chat message.
+     */
+    public String getResponse(String input) {
+        return "Gihun heard: " + input;
     }
 }
