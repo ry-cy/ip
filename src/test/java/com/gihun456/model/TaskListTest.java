@@ -39,6 +39,31 @@ public class TaskListTest {
     }
 
     @Test
+    public void addAll_varargsTasks_tasksAreAppended() {
+        TaskList taskList = new TaskList();
+        Todo first = new Todo("Read book");
+        Todo second = new Todo("Write code");
+
+        taskList.addAll(first, second);
+
+        assertEquals(2, taskList.size());
+        assertSame(first, taskList.get(0));
+        assertSame(second, taskList.get(1));
+    }
+
+    @Test
+    public void constructor_varargsTasks_tasksAreStored() {
+        Todo first = new Todo("Read book");
+        Todo second = new Todo("Write code");
+
+        TaskList taskList = new TaskList(first, second);
+
+        assertEquals(2, taskList.size());
+        assertSame(first, taskList.get(0));
+        assertSame(second, taskList.get(1));
+    }
+
+    @Test
     public void remove_validIndex_removesAndReturnsTask() {
         TaskList taskList = new TaskList();
         Todo first = new Todo("Read book");
