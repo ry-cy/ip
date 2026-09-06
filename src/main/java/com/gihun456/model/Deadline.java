@@ -1,12 +1,12 @@
 package com.gihun456.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Locale;
 
+import com.gihun456.ErrorMessages;
 import com.gihun456.GihunException;
+import com.gihun456.util.DateTimeParser;
 
 /**
  * Represents a task that must be completed by a specific date or time.
@@ -14,9 +14,6 @@ import com.gihun456.GihunException;
 public class Deadline extends Task {
     private static final DateTimeFormatter DISPLAY_FORMATTER =
             DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
-    private static final DateTimeFormatter STORAGE_FORMATTER =
-            DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
     private final LocalDateTime dueDate;
 
     /**
@@ -52,17 +49,7 @@ public class Deadline extends Task {
     }
 
     /**
-     * Formats a date-time for storage.
-     *
-     * @param dateTime Date-time to format.
-     * @return ISO date-time string.
-     */
-    public static String formatForStorage(LocalDateTime dateTime) {
-        return STORAGE_FORMATTER.format(dateTime);
-    }
-
-    /**
-     * Parses a string into a LocalDateTime object. Includes support for commonly used date formats.
+     * Parses a string into a LocalDateTime object using the supported date formats.
      *
      * @param dueDateText String of date with optional time.
      * @return LocalDateTime representation of the dateTime.
@@ -71,75 +58,14 @@ public class Deadline extends Task {
     private static LocalDateTime parseDueDate(String dueDateText) throws GihunException {
         String trimmed = dueDateText.trim();
         if (trimmed.isEmpty()) {
-            throw new GihunException("Deadline date cannot be empty.");
+            throw new GihunException(ErrorMessages.DEADLINE_DATE_EMPTY);
         }
 
-        trimmed = trimmed.replaceAll("(?i)(\\d{1,2}:\\d{2})\\s*(am|pm)\\b", "$1 $2");
-        trimmed = trimmed.replaceAll("(?i)(\\d{1,2})\\s*(am|pm)\\b", "$1 $2");
-        trimmed = trimmed.toUpperCase(Locale.ROOT);
-
-        DateTimeFormatter[] dateTimeFormatters = {
-            DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),
-            DateTimeFormatter.ofPattern("d/M/yyyy HH:mm"),
-            DateTimeFormatter.ofPattern("d/M/yyyy h a", Locale.US),
-            DateTimeFormatter.ofPattern("d/M/yyyy h:mm a", Locale.US),
-            DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm"),
-            DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"),
-            DateTimeFormatter.ofPattern("dd-MM-yyyy h a", Locale.US),
-            DateTimeFormatter.ofPattern("dd-MM-yyyy h:mm a", Locale.US),
-            DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm"),
-            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"),
-            DateTimeFormatter.ofPattern("dd/MM/yyyy h a", Locale.US),
-            DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm a", Locale.US),
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"),
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"),
-            DateTimeFormatter.ofPattern("yyyy-MM-dd h a", Locale.US),
-            DateTimeFormatter.ofPattern("yyyy-MM-dd h:mm a", Locale.US),
-            DateTimeFormatter.ofPattern("yyyy/M/d HHmm"),
-            DateTimeFormatter.ofPattern("yyyy/M/d HH:mm"),
-            DateTimeFormatter.ofPattern("yyyy/M/d h a", Locale.US),
-            DateTimeFormatter.ofPattern("yyyy/M/d h:mm a", Locale.US),
-            DateTimeFormatter.ofPattern("d/M/yy HHmm"),
-            DateTimeFormatter.ofPattern("d/M/yy HH:mm"),
-            DateTimeFormatter.ofPattern("d/M/yy h a", Locale.US),
-            DateTimeFormatter.ofPattern("d/M/yy h:mm a", Locale.US),
-            DateTimeFormatter.ofPattern("dd-MM-yy HHmm"),
-            DateTimeFormatter.ofPattern("dd-MM-yy HH:mm"),
-            DateTimeFormatter.ofPattern("dd-MM-yy h a", Locale.US),
-            DateTimeFormatter.ofPattern("dd-MM-yy h:mm a", Locale.US),
-            DateTimeFormatter.ISO_LOCAL_DATE_TIME
-        };
-
-        for (DateTimeFormatter formatter : dateTimeFormatters) {
-            try {
-                return LocalDateTime.parse(trimmed, formatter);
-            } catch (DateTimeParseException ignored) {
-                // Try the next supported date-time format.
-            }
+        try {
+            return DateTimeParser.parseUserDateTime(trimmed);
+        } catch (DateTimeParseException e) {
+            throw new GihunException(ErrorMessages.INVALID_DEADLINE_FORMAT);
         }
-
-        DateTimeFormatter[] dateOnlyFormatters = {
-            DateTimeFormatter.ofPattern("d/M/yyyy"),
-            DateTimeFormatter.ofPattern("dd/MM/yyyy"),
-            DateTimeFormatter.ofPattern("dd-MM-yyyy"),
-            DateTimeFormatter.ofPattern("yyyy-MM-dd"),
-            DateTimeFormatter.ofPattern("yyyy/M/d"),
-            DateTimeFormatter.ofPattern("d/M/yy"),
-            DateTimeFormatter.ofPattern("dd/MM/yy"),
-            DateTimeFormatter.ofPattern("dd-MM-yy"),
-            DateTimeFormatter.ISO_LOCAL_DATE
-        };
-
-        for (DateTimeFormatter formatter : dateOnlyFormatters) {
-            try {
-                return LocalDate.parse(trimmed, formatter).atStartOfDay();
-            } catch (DateTimeParseException ignored) {
-                // Try the next supported date-only format.
-            }
-        }
-
-        throw new GihunException(
-                "Invalid deadline format. Please use yyyy-MM-dd, dd-MM-yyyy, d/M/yyyy, or d/M/yyyy HHmm.");
     }
 
     @Override

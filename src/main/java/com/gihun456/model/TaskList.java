@@ -3,6 +3,7 @@ package com.gihun456.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gihun456.ErrorMessages;
 import com.gihun456.GihunException;
 
 /**
@@ -74,19 +75,19 @@ public class TaskList {
      */
     public int getValidIndex(String input) throws GihunException {
         if (input == null || input.trim().isEmpty()) {
-            throw new GihunException("The task number is invalid.");
+            throw new GihunException(ErrorMessages.INVALID_TASK_NUMBER);
         }
 
         int taskNumber;
         try {
             taskNumber = Integer.parseInt(input.trim());
         } catch (NumberFormatException e) {
-            throw new GihunException("The task number is invalid.", e);
+            throw new GihunException(ErrorMessages.INVALID_TASK_NUMBER, e);
         }
 
         int zeroBasedIndex = taskNumber - 1;
         if (zeroBasedIndex < 0 || zeroBasedIndex >= tasks.size()) {
-            throw new GihunException("The task number is invalid.");
+            throw new GihunException(ErrorMessages.INVALID_TASK_NUMBER);
         }
 
         return zeroBasedIndex;
@@ -101,7 +102,7 @@ public class TaskList {
      */
     public List<Task> getMatchedTasks(String matchingKey) throws GihunException {
         if (matchingKey == null || matchingKey.trim().isEmpty()) {
-            throw new GihunException("The keyword cannot be empty.");
+            throw new GihunException(ErrorMessages.EMPTY_KEYWORD);
         }
 
         String normalizedKey = matchingKey.trim().toLowerCase();

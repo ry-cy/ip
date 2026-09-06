@@ -1,5 +1,6 @@
 package com.gihun456.command;
 
+import com.gihun456.ErrorMessages;
 import com.gihun456.GihunException;
 
 /**
@@ -36,6 +37,6 @@ public enum Operation {
             }
         }
 
-        throw new GihunException("Invalid operation: " + input);
+        throw new GihunException(ErrorMessages.invalidOperation(input));
     }
 }

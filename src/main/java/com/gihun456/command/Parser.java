@@ -1,5 +1,6 @@
 package com.gihun456.command;
 
+import com.gihun456.ErrorMessages;
 import com.gihun456.GihunException;
 import com.gihun456.model.Deadline;
 import com.gihun456.model.Event;
@@ -8,6 +9,9 @@ import com.gihun456.model.Event;
  * Parses raw user input into an operation and its arguments.
  */
 public class Parser {
+    private static final Integer FROM_LENGTH = 5;
+    private static final Integer BY_TO_LENGTH = 3;
+
     /**
      * Represents one parsed user command.
      */
@@ -44,7 +48,7 @@ public class Parser {
      */
     public ParsedInput parse(String input) throws GihunException {
         if (input == null || input.trim().isEmpty()) {
-            throw new GihunException("Empty command.");
+            throw new GihunException(ErrorMessages.EMPTY_COMMAND);
         }
 
         String trimmed = input.trim();
@@ -61,22 +65,22 @@ public class Parser {
      */
     public Deadline parseDeadline(String arguments) throws GihunException {
         if (arguments == null || arguments.trim().isEmpty()) {
-            throw new GihunException("The description of a deadline cannot be empty.");
+            throw new GihunException(ErrorMessages.DEADLINE_DESCRIPTION_EMPTY);
         }
 
         int byIndex = arguments.indexOf("/by");
         if (byIndex < 0) {
-            throw new GihunException("A deadline must include '/by'.");
+            throw new GihunException(ErrorMessages.DEADLINE_BY_MISSING);
         }
 
         String taskName = arguments.substring(0, byIndex).trim();
         if (taskName.isEmpty()) {
-            throw new GihunException("The description of a deadline cannot be empty.");
+            throw new GihunException(ErrorMessages.DEADLINE_DESCRIPTION_EMPTY);
         }
 
-        String dueDate = arguments.substring(byIndex + 3).trim();
+        String dueDate = arguments.substring(byIndex + BY_TO_LENGTH).trim();
         if (dueDate.isEmpty()) {
-            throw new GihunException("The due date of a deadline cannot be empty.");
+            throw new GihunException(ErrorMessages.DEADLINE_DUE_DATE_EMPTY);
         }
 
         return new Deadline(taskName, dueDate);
@@ -87,33 +91,33 @@ public class Parser {
      */
     public Event parseEvent(String arguments) throws GihunException {
         if (arguments == null || arguments.trim().isEmpty()) {
-            throw new GihunException("The description of an event cannot be empty.");
+            throw new GihunException(ErrorMessages.EVENT_DESCRIPTION_EMPTY);
         }
 
         int fromIndex = arguments.indexOf("/from");
         int toIndex = arguments.indexOf("/to");
 
         if (fromIndex < 0 || toIndex < 0) {
-            throw new GihunException("An event must include '/from' and '/to'.");
+            throw new GihunException(ErrorMessages.EVENT_FROM_TO_MISSING);
         }
 
         if (toIndex < fromIndex) {
-            throw new GihunException("An event must specify '/from' before '/to'.");
+            throw new GihunException(ErrorMessages.EVENT_FROM_BEFORE_TO);
         }
 
         String taskName = arguments.substring(0, fromIndex).trim();
         if (taskName.isEmpty()) {
-            throw new GihunException("The description of an event cannot be empty.");
+            throw new GihunException(ErrorMessages.EVENT_DESCRIPTION_EMPTY);
         }
 
-        String startDate = arguments.substring(fromIndex + 5, toIndex).trim();
-        String endDate = arguments.substring(toIndex + 3).trim();
+        String startDate = arguments.substring(fromIndex + FROM_LENGTH, toIndex).trim();
+        String endDate = arguments.substring(toIndex + BY_TO_LENGTH).trim();
 
         if (startDate.isEmpty()) {
-            throw new GihunException("The start date of an event cannot be empty.");
+            throw new GihunException(ErrorMessages.EVENT_START_DATE_EMPTY);
         }
         if (endDate.isEmpty()) {
-            throw new GihunException("The end date of an event cannot be empty.");
+            throw new GihunException(ErrorMessages.EVENT_END_DATE_EMPTY);
         }
 
         return new Event(taskName, startDate, endDate);

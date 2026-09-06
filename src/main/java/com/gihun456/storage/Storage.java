@@ -8,11 +8,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gihun456.ErrorMessages;
 import com.gihun456.GihunException;
 import com.gihun456.model.Deadline;
 import com.gihun456.model.Event;
 import com.gihun456.model.Task;
 import com.gihun456.model.Todo;
+import com.gihun456.util.DateTimeParser;
 
 /**
  * Saves the current task list to the application's data file.
@@ -52,7 +54,7 @@ public class Storage {
                     contents.toString(),
                     StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new GihunException("Unable to access tasks file.", e);
+            throw new GihunException(ErrorMessages.CANNOT_ACCESS_FILE, e);
         }
     }
 
@@ -95,7 +97,7 @@ public class Storage {
                                 continue;
                             }
                             String deadline = parts[3].trim();
-                            task = new Deadline(description, deadline);
+                            task = new Deadline(description, DateTimeParser.parseStoredDateTime(deadline));
                             break;
 
                         case "E":
@@ -105,11 +107,14 @@ public class Storage {
                             String eventStart = parts[3].trim();
                             String eventEnd = parts[4].trim();
 
-                            task = new Event(description, eventStart, eventEnd);
+                            task = new Event(
+                                    description,
+                                    DateTimeParser.parseStoredDateTime(eventStart),
+                                    DateTimeParser.parseStoredDateTime(eventEnd));
                             break;
 
                         default:
-                            continue;
+                            throw new GihunException(ErrorMessages.CANNOT_PARSE_TASK);
                     }
                 } catch (GihunException e) {
                     continue;
@@ -124,7 +129,7 @@ public class Storage {
 
             return tasks;
         } catch (IOException e) {
-            throw new GihunException("Unable to load tasks from file.", e);
+            throw new GihunException(ErrorMessages.CANNOT_ACCESS_FILE, e);
         }
     }
 
@@ -140,12 +145,12 @@ public class Storage {
         switch (task) {
             case Deadline deadline -> {
                 type = "D";
-                details = " | " + Deadline.formatForStorage(deadline.getDueDate());
+                details = " | " + DateTimeParser.formatForStorage(deadline.getDueDate());
             }
             case Event event -> {
                 type = "E";
-                details = " | " + Event.formatForStorage(event.getStartDate())
-                        + " | " + Event.formatForStorage(event.getEndDate());
+                details = " | " + DateTimeParser.formatForStorage(event.getStartDate())
+                        + " | " + DateTimeParser.formatForStorage(event.getEndDate());
             }
             default -> {
                 type = "T";
@@ -154,4 +159,5 @@ public class Storage {
 
         return type + " | " + task.getStatusIcon() + " | " + task.getTaskName() + details;
     }
+
 }

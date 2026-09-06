@@ -69,7 +69,7 @@ public class Gihun456 {
                 switch (operation) {
                     case TODO: {
                         if (arguments.trim().isEmpty()) {
-                            throw new GihunException("The description of a todo cannot be empty.");
+                            throw new GihunException(ErrorMessages.TODO_DESCRIPTION_EMPTY);
                         }
 
                         Task newTask = new Todo(arguments);
@@ -156,13 +156,13 @@ public class Gihun456 {
                         return;
                     }
                     default:
-                        throw new GihunException("Unsupported operation.");
+                        throw new GihunException(ErrorMessages.UNSUPPORTED_OPERATION);
                 }
             } catch (GihunException ge) {
                 ui.showError(ge.getMessage());
                 ui.showLine();
             } catch (Exception e) {
-                System.out.println("An unexpected error occurred. Please try again.");
+                System.out.println(ErrorMessages.UNEXPECTED_ERROR);
                 e.printStackTrace(System.err);
                 System.out.println();
             }
