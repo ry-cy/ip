@@ -1,4 +1,4 @@
-package com.gihun456;
+package com.gihun456.gui;
 
 import javafx.application.Application;
 
@@ -10,4 +10,3 @@ public class Launcher {
         Application.launch(Main.class, args);
     }
 }
-
