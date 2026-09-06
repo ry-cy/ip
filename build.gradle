@@ -57,7 +57,7 @@ test {
 }
 
 application {
-    mainClass = 'com.gihun456.Gihun456'
+    mainClass = 'com.gihun456.Launcher'
 }
 
 jar {
