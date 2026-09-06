@@ -1,15 +1,14 @@
 package com.gihun456.gui;
 
-import javafx.fxml.FXML;
+import com.gihun456.Gihun456;
 
+import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-
-import com.gihun456.Gihun456;
 
 /**
  * Controller for the main GUI.
@@ -34,7 +33,9 @@ public class MainWindow extends AnchorPane {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /** Injects the Gihun456 instance */
+    /**
+     * Injects the Gihun456 instance. 
+     */
     public void setGihun(Gihun456 g) {
         gihun = g;
     }
@@ -52,5 +53,10 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getGihunDialog(response, gihunImage)
         );
         userInput.clear();
+
+        if (input.trim().equalsIgnoreCase("bye")) {
+            userInput.setDisable(true);
+            sendButton.setDisable(true);
+        }
     }
 }

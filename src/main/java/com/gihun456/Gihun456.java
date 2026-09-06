@@ -10,6 +10,7 @@ import com.gihun456.model.TaskList;
 import com.gihun456.model.Todo;
 import com.gihun456.storage.Storage;
 import com.gihun456.ui.Ui;
+import com.gihun456.ui.UiMessages;
 
 /**
  * Entry point for the Gihun456 task application.
@@ -56,7 +57,7 @@ public class Gihun456 {
         final Scanner scanner = new Scanner(System.in);
 
         try {
-            tasks.addAll(storage.load());
+            loadTasks();
         } catch (GihunException ge) {
             ui.showError(ge.getMessage());
             return;
@@ -66,101 +67,10 @@ public class Gihun456 {
             String input = scanner.nextLine();
 
             try {
-                Parser.ParsedInput parsedInput = parser.parse(input);
-                Operation operation = parsedInput.getOperation();
-                String arguments = parsedInput.getArguments();
-
-                switch (operation) {
-                    case TODO: {
-                        if (arguments.trim().isEmpty()) {
-                            throw new GihunException(ErrorMessages.TODO_DESCRIPTION_EMPTY);
-                        }
-
-                        Task newTask = new Todo(arguments);
-                        tasks.add(newTask);
-                        storage.save(tasks.asList());
-                        ui.showTaskAdded(newTask, tasks.size());
-                        break;
-                    }
-
-                    case DEADLINE: {
-                        Task newTask = parser.parseDeadline(arguments);
-                        tasks.add(newTask);
-                        storage.save(tasks.asList());
-                        ui.showTaskAdded(newTask, tasks.size());
-                        break;
-                    }
-
-                    case EVENT: {
-                        Task newTask = parser.parseEvent(arguments);
-                        tasks.add(newTask);
-                        storage.save(tasks.asList());
-                        ui.showTaskAdded(newTask, tasks.size());
-                        break;
-                    }
-
-                    case LIST:
-                        if (tasks.isEmpty()) {
-                            ui.showEmptyList();
-                            break;
-                        }
-
-                        ui.showTaskList(tasks.asList(), false);
-                        break;
-
-                    case FIND:
-                        if (tasks.isEmpty()) {
-                            ui.showEmptyList();
-                            break;
-                        }
-
-                        List<Task> matchingTasks = tasks.getMatchedTasks(arguments);
-                        if (matchingTasks.isEmpty()) {
-                            ui.showNoMatchingTasks();
-                            break;
-                        }
-
-                        ui.showTaskList(matchingTasks, true);
-                        break;
-
-                    case MARK: {
-                        int toMark = tasks.getValidIndex(arguments);
-                        Task currentTask = tasks.get(toMark);
-                        tasks.markTask(toMark);
-                        storage.save(tasks.asList());
-                        ui.showTaskMarked(currentTask);
-                        break;
-                    }
-
-                    case UNMARK: {
-                        int toUnmark = tasks.getValidIndex(arguments);
-                        Task currentTask = tasks.get(toUnmark);
-                        tasks.unmarkTask(toUnmark);
-                        storage.save(tasks.asList());
-                        ui.showTaskUnmarked(currentTask);
-                        break;
-                    }
-
-                    case DELETE: {
-                        if (tasks.isEmpty()) {
-                            ui.showEmptyList();
-                            break;
-                        }
-
-                        int toDelete = tasks.getValidIndex(arguments);
-                        Task currentTask = tasks.get(toDelete);
-                        tasks.remove(toDelete);
-                        storage.save(tasks.asList());
-                        ui.showTaskRemoved(currentTask, tasks.size());
-                        break;
-                    }
-
-                    case BYE: {
-                        ui.showFarewell();
-                        return;
-                    }
-                    default:
-                        throw new GihunException(ErrorMessages.UNSUPPORTED_OPERATION);
+                String response = processCommand(input);
+                System.out.println(response);
+                if (parser.parse(input).getOperation() == Operation.BYE) {
+                    return;
                 }
             } catch (GihunException ge) {
                 ui.showError(ge.getMessage());
@@ -174,9 +84,118 @@ public class Gihun456 {
     }
 
     /**
-     * Generates a response for the user's chat message.
+     * Loads the persisted tasks into memory.
+     *
+     * @throws GihunException If the task data cannot be read.
+     */
+    public void loadTasks() throws GihunException {
+        if (tasks.isEmpty()) {
+            tasks.addAll(storage.load());
+        }
+    }
+
+    /**
+     * Executes a command and returns the text that should be shown to the user.
+     * This method is shared by the console and JavaFX interfaces.
+     *
+     * @param input Raw command entered by the user.
+     * @return User-facing command response.
+     * @throws GihunException If the command is invalid or cannot be completed.
+     */
+    public String processCommand(String input) throws GihunException {
+        Parser.ParsedInput parsedInput = parser.parse(input);
+        Operation operation = parsedInput.getOperation();
+        String arguments = parsedInput.getArguments();
+
+        switch (operation) {
+            case TODO: {
+                if (arguments.trim().isEmpty()) {
+                    throw new GihunException(ErrorMessages.TODO_DESCRIPTION_EMPTY);
+                }
+                Task newTask = new Todo(arguments);
+                tasks.add(newTask);
+                storage.save(tasks.asList());
+                return formatTaskAdded(newTask);
+            }
+            case DEADLINE: {
+                Task newTask = parser.parseDeadline(arguments);
+                tasks.add(newTask);
+                storage.save(tasks.asList());
+                return formatTaskAdded(newTask);
+            }
+            case EVENT: {
+                Task newTask = parser.parseEvent(arguments);
+                tasks.add(newTask);
+                storage.save(tasks.asList());
+                return formatTaskAdded(newTask);
+            }
+            case LIST:
+                return tasks.isEmpty() ? UiMessages.EMPTY_STORAGE : formatTaskList(tasks.asList(), false);
+            case FIND:
+                if (tasks.isEmpty()) {
+                    return UiMessages.EMPTY_STORAGE;
+                }
+                List<Task> matchingTasks = tasks.getMatchedTasks(arguments);
+                return matchingTasks.isEmpty()
+                        ? UiMessages.NO_MATCHING_TASKS
+                        : formatTaskList(matchingTasks, true);
+            case MARK: {
+                int index = tasks.getValidIndex(arguments);
+                Task task = tasks.get(index);
+                tasks.markTask(index);
+                storage.save(tasks.asList());
+                return UiMessages.MARK_TASK + "\n" + task;
+            }
+            case UNMARK: {
+                int index = tasks.getValidIndex(arguments);
+                Task task = tasks.get(index);
+                tasks.unmarkTask(index);
+                storage.save(tasks.asList());
+                return UiMessages.UNMARK_TASK + "\n" + task;
+            }
+            case DELETE: {
+                if (tasks.isEmpty()) {
+                    return UiMessages.EMPTY_STORAGE;
+                }
+                int index = tasks.getValidIndex(arguments);
+                Task task = tasks.remove(index);
+                storage.save(tasks.asList());
+                return UiMessages.REMOVE_TASK + "\n" + task
+                        + "\nNow you have " + tasks.size() + " tasks in the list.";
+            }
+            case BYE:
+                return UiMessages.FAREWELL;
+            default:
+                throw new GihunException(ErrorMessages.UNSUPPORTED_OPERATION);
+        }
+    }
+
+    /**
+     * Generates a response for the JavaFX chat view, including validation errors.
+     *
+     * @param input Raw command entered by the user.
+     * @return User-facing response.
      */
     public String getResponse(String input) {
-        return "Gihun heard: " + input;
+        try {
+            return processCommand(input);
+        } catch (GihunException e) {
+            return ErrorMessages.ERROR_PREFIX + e.getMessage();
+        }
+    }
+
+    private String formatTaskAdded(Task task) {
+        return UiMessages.ADD_TASK + "\n" + task
+                + "\nNow you have " + tasks.size() + " tasks in the list.";
+    }
+
+    private String formatTaskList(List<Task> taskList, boolean isMatching) {
+        StringBuilder response = new StringBuilder(isMatching
+                ? UiMessages.LIST_MATCHING_TASKS
+                : UiMessages.LIST_TASKS);
+        for (int i = 0; i < taskList.size(); i++) {
+            response.append("\n").append(i + 1).append(". ").append(taskList.get(i));
+        }
+        return response.toString();
     }
 }
