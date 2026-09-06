@@ -58,4 +58,17 @@ public class DialogBox extends HBox {
         db.flip();
         return db;
     }
+
+    /**
+     * Creates a bot dialog styled for preserving the alignment of ASCII art.
+     *
+     * @param text ASCII art and accompanying text to display.
+     * @param img Image representing the bot.
+     * @return A bot dialog box with monospaced text.
+     */
+    public static DialogBox getGihunBannerDialog(String text, Image img) {
+        var db = getGihunDialog(text, img);
+        db.dialog.getStyleClass().add("banner-label");
+        return db;
+    }
 }

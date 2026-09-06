@@ -5,11 +5,10 @@ package com.gihun456.ui;
  */
 public final class UiMessages {
     public static final String BANNER = """
-                          ____ _ _                 _  _  ____   __
-                         / ___(_) |__  _   _ _ __ | || || ___| / /_
-                        | |  _| | '_ \\| | | | '_ \\| || ||___ \\| '_ \\
-                        | |_| | | | | | |_| | | | |__   _|__) | (_) |
-                         \\____|_|_| |_|\\__,_|_| |_|  |_||____/ \\___/
+                         __                    _   _  
+                        /__ o |_      ._ |_|_ |_  |_  
+                        \\_| | | | |_| | |  |   _) |_) 
+                               
                          """;
 
     public static final String GREETING = "Hello! I'm Gihun456.\nWhat can I do for you?";

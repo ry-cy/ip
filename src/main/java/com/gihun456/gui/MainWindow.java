@@ -1,6 +1,7 @@
 package com.gihun456.gui;
 
 import com.gihun456.Gihun456;
+import com.gihun456.ui.UiMessages;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -31,6 +32,10 @@ public class MainWindow extends AnchorPane {
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        dialogContainer.getChildren().addAll(
+                DialogBox.getGihunBannerDialog(UiMessages.BANNER, gihunImage),
+                DialogBox.getGihunDialog(UiMessages.GREETING, gihunImage)
+        );
     }
 
     /**
