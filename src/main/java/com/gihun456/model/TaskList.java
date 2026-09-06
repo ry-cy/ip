@@ -1,6 +1,7 @@
 package com.gihun456.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.gihun456.ErrorMessages;
@@ -29,6 +30,15 @@ public class TaskList {
     }
 
     /**
+     * Creates a task list initialised from the given tasks.
+     *
+     * @param initialTasks Tasks to copy into the list.
+     */
+    public TaskList(Task... initialTasks) {
+        this.tasks = new ArrayList<>(Arrays.asList(initialTasks));
+    }
+
+    /**
      * Adds a task to the list.
      *
      * @param task Task to add.
@@ -44,6 +54,15 @@ public class TaskList {
      */
     public void addAll(List<Task> tasksToAdd) {
         tasks.addAll(tasksToAdd);
+    }
+
+    /**
+     * Adds the given tasks to the list.
+     *
+     * @param tasksToAdd Tasks to add.
+     */
+    public void addAll(Task... tasksToAdd) {
+        tasks.addAll(Arrays.asList(tasksToAdd));
     }
 
     /**
