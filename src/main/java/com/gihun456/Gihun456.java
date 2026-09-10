@@ -161,7 +161,7 @@ public class Gihun456 {
                 Task task = tasks.remove(index);
                 storage.save(tasks.asList());
                 return UiMessages.REMOVE_TASK + "\n" + task
-                        + "\nNow you have " + tasks.size() + " tasks in the list.";
+                        + "\n이제 목록에 " + tasks.size() + " 개의 작업이 있습니다.";
             }
             case BYE:
                 return UiMessages.FAREWELL;
@@ -186,7 +186,7 @@ public class Gihun456 {
 
     private String formatTaskAdded(Task task) {
         return UiMessages.ADD_TASK + "\n" + task
-                + "\nNow you have " + tasks.size() + " tasks in the list.";
+                + "\n이제 목록에 " + tasks.size() + " 개의 작업이 있습니다.";
     }
 
     private String formatTaskList(List<Task> taskList, boolean isMatching) {
