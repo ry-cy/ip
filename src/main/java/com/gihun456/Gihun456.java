@@ -67,9 +67,10 @@ public class Gihun456 {
             String input = scanner.nextLine();
 
             try {
-                String response = processCommand(input);
+                Parser.ParsedInput parsedInput = parser.parse(input);
+                String response = processCommand(parsedInput);
                 System.out.println(response);
-                if (parser.parse(input).getOperation() == Operation.BYE) {
+                if (parsedInput.getOperation() == Operation.BYE) {
                     return;
                 }
             } catch (GihunException ge) {
@@ -103,7 +104,17 @@ public class Gihun456 {
      * @throws GihunException If the command is invalid or cannot be completed.
      */
     public String processCommand(String input) throws GihunException {
-        Parser.ParsedInput parsedInput = parser.parse(input);
+        return processCommand(parser.parse(input));
+    }
+
+    /**
+     * Executes a previously parsed command.
+     *
+     * @param parsedInput Parsed command and its arguments.
+     * @return User-facing command response.
+     * @throws GihunException If the command is invalid or cannot be completed.
+     */
+    private String processCommand(Parser.ParsedInput parsedInput) throws GihunException {
         Operation operation = parsedInput.getOperation();
         String arguments = parsedInput.getArguments();
 
