@@ -112,22 +112,13 @@ public class Gihun456 {
                 if (arguments.trim().isEmpty()) {
                     throw new GihunException(ErrorMessages.TODO_DESCRIPTION_EMPTY);
                 }
-                Task newTask = new Todo(arguments);
-                tasks.add(newTask);
-                storage.save(tasks.asList());
-                return formatTaskAdded(newTask);
+                return addTask(new Todo(arguments));
             }
             case DEADLINE: {
-                Task newTask = parser.parseDeadline(arguments);
-                tasks.add(newTask);
-                storage.save(tasks.asList());
-                return formatTaskAdded(newTask);
+                return addTask(parser.parseDeadline(arguments));
             }
             case EVENT: {
-                Task newTask = parser.parseEvent(arguments);
-                tasks.add(newTask);
-                storage.save(tasks.asList());
-                return formatTaskAdded(newTask);
+                return addTask(parser.parseEvent(arguments));
             }
             case LIST:
                 return tasks.isEmpty() ? UiMessages.EMPTY_STORAGE : formatTaskList(tasks.asList(), false);
@@ -182,6 +173,19 @@ public class Gihun456 {
         } catch (GihunException e) {
             return ErrorMessages.ERROR_PREFIX + e.getMessage();
         }
+    }
+
+    /**
+     * Adds a task, persists the updated list, and formats the confirmation response.
+     *
+     * @param task Task to add.
+     * @return User-facing confirmation response.
+     * @throws GihunException If the updated task list cannot be saved.
+     */
+    private String addTask(Task task) throws GihunException {
+        tasks.add(task);
+        storage.save(tasks.asList());
+        return formatTaskAdded(task);
     }
 
     private String formatTaskAdded(Task task) {
