@@ -26,6 +26,8 @@ public class Parser {
          * @param arguments Operation arguments.
          */
         public ParsedInput(Operation operation, String arguments) {
+            assert operation != null : "Parsed input must have an operation";
+            assert arguments != null : "Parsed input must have non-null arguments";
             this.operation = operation;
             this.arguments = arguments;
         }

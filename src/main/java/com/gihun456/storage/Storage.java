@@ -42,6 +42,7 @@ public class Storage {
      * @throws GihunException If the data directory or file cannot be written.
      */
     public void save(List<Task> tasks) throws GihunException {
+        assert tasks != null : "Storage cannot save a null task list";
         try {
             Files.createDirectories(taskFile.getParent());
 
@@ -140,6 +141,7 @@ public class Storage {
      * @return String representation of formatted task, for writing to the file.
      */
     private String formatTask(Task task) {
+        assert task != null : "Storage cannot format a null task";
         String type;
         String details = "";
         switch (task) {
