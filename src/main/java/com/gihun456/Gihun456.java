@@ -145,14 +145,14 @@ public class Gihun456 {
                 int index = tasks.getValidIndex(arguments);
                 Task task = tasks.get(index);
                 tasks.markTask(index);
-                storage.save(tasks.asList());
+                saveTasks();
                 return UiMessages.MARK_TASK + "\n" + task;
             }
             case UNMARK: {
                 int index = tasks.getValidIndex(arguments);
                 Task task = tasks.get(index);
                 tasks.unmarkTask(index);
-                storage.save(tasks.asList());
+                saveTasks();
                 return UiMessages.UNMARK_TASK + "\n" + task;
             }
             case DELETE: {
@@ -161,7 +161,7 @@ public class Gihun456 {
                 }
                 int index = tasks.getValidIndex(arguments);
                 Task task = tasks.remove(index);
-                storage.save(tasks.asList());
+                saveTasks();
                 return UiMessages.REMOVE_TASK + "\n" + task
                         + "\nNow you have " + tasks.size() + " tasks in the list.";
             }
@@ -195,8 +195,17 @@ public class Gihun456 {
      */
     private String addTask(Task task) throws GihunException {
         tasks.add(task);
-        storage.save(tasks.asList());
+        saveTasks();
         return formatTaskAdded(task);
+    }
+
+    /**
+     * Persists the current in-memory task list.
+     *
+     * @throws GihunException If the task list cannot be saved.
+     */
+    private void saveTasks() throws GihunException {
+        storage.save(tasks.asList());
     }
 
     private String formatTaskAdded(Task task) {
