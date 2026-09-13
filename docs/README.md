@@ -52,3 +52,23 @@ deadline Submit project report /by 15/09/2026 1900
 
 The supported date formats are `dd/MM/yyyy` and `yyyy-MM-dd`, optionally
 followed by a space and `HHmm`.
+
+## Scheduling conflicts
+
+When a new deadline or event overlaps an existing incomplete deadline or event,
+Gihun456 displays the proposed task and every conflicting task before adding it:
+
+```text
+This task conflicts with existing tasks:
+Proposed task:
+[D][ ] Submit report (by: Sept 15 2026, 10:30 am)
+Conflicting tasks:
+1. [E][ ] Team meeting (from: Sept 15 2026, 10:00 am to: Sept 15 2026, 11:00 am)
+Add it anyway? (yes/no)
+```
+
+Reply with `yes` to add the task or `no` to cancel it. Responses are
+case-insensitive and may have surrounding spaces. Any other response is
+rejected until `yes`, `no`, or `bye` is entered. Todos and completed dated
+tasks do not trigger scheduling warnings. Events must end at or after their
+start time.

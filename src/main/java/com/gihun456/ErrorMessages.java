@@ -22,6 +22,7 @@ public final class ErrorMessages {
     public static final String EVENT_FROM_BEFORE_TO = "An event must specify '/from' before '/to'.";
     public static final String EVENT_START_DATE_EMPTY = "The start date of an event cannot be empty.";
     public static final String EVENT_END_DATE_EMPTY = "The end date of an event cannot be empty.";
+    public static final String EVENT_END_BEFORE_START = "An event must end at or after its start date.";
     public static final String REMINDERS_ARGUMENTS = "The reminders command does not accept arguments.";
 
     // TaskList
@@ -37,6 +38,8 @@ public final class ErrorMessages {
     public static final String EVENT_DATE_EMPTY = "Event date cannot be empty.";
     public static final String INVALID_EVENT_DATE_FORMAT =
             "Invalid event date format. Please use dd/MM/yyyy or yyyy-MM-dd, optionally followed by a space and HHmm.";
+    public static final String INVALID_CONFIRMATION =
+            "Please answer 'yes' or 'no' to confirm adding the conflicting task.";
 
     // Storage
     public static final String CANNOT_ACCESS_FILE = "Unable to access tasks file.";

@@ -31,3 +31,22 @@
 - Existing task commands continue to work.
 - Existing storage records load without migration.
 - Reminder evaluation does not modify task status, order, or storage.
+
+## Scheduling conflict detection
+
+- Deadline additions compare equal timestamps.
+- A deadline conflicts with an event only when it falls strictly inside the event.
+- Events conflict only when their intervals have positive-duration overlap.
+- Events and deadlines that touch at an endpoint do not conflict.
+- Todos and completed dated tasks are ignored.
+- Incomplete dated tasks in the past still participate in conflict detection.
+- Reversed newly entered events are rejected, while malformed legacy events remain
+  loadable and are ignored for conflict detection.
+
+## Conflict confirmation
+
+- A conflicting task is shown with every conflict and is not saved before confirmation.
+- `yes` adds and saves the pending task.
+- `no` leaves the task list and storage unchanged.
+- Invalid confirmation input shows an error and keeps the confirmation pending.
+- `bye` cancels the pending task and exits without saving it.

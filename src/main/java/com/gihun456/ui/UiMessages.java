@@ -26,6 +26,11 @@ public final class UiMessages {
     public static final String UPCOMING_REMINDERS = "Upcoming deadlines/events:";
     public static final String MISSED_REMINDERS = "Missed deadlines/events:";
     public static final String NO_REMINDERS = "No upcoming or missed reminders.";
+    public static final String CONFLICT_WARNING = "This task conflicts with existing tasks:";
+    public static final String PROPOSED_TASK = "Proposed task:";
+    public static final String CONFLICTING_TASKS = "Conflicting tasks:";
+    public static final String CONFLICT_CONFIRMATION = "Add it anyway? (yes/no)";
+    public static final String TASK_NOT_ADDED = "Okay, I did not add the task.";
 
     private UiMessages() {
     }

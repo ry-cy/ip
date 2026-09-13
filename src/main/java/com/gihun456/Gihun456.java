@@ -25,6 +25,7 @@ public class Gihun456 {
     private final Parser parser;
     private final Storage storage;
     private final ReminderService reminderService;
+    private PendingConfirmation pendingConfirmation;
 
     /**
      * Creates an application instance backed by the given data file.
@@ -99,10 +100,9 @@ public class Gihun456 {
             String input = scanner.nextLine();
 
             try {
-                Parser.ParsedInput parsedInput = parser.parse(input);
-                String response = processCommand(parsedInput);
+                String response = processCommand(input);
                 System.out.println(response);
-                if (parsedInput.getOperation() == Operation.BYE) {
+                if (input.trim().equalsIgnoreCase("bye")) {
                     return;
                 }
             } catch (GihunException ge) {
@@ -136,6 +136,9 @@ public class Gihun456 {
      * @throws GihunException If the command is invalid or cannot be completed.
      */
     public String processCommand(String input) throws GihunException {
+        if (pendingConfirmation != null) {
+            return processConfirmation(input);
+        }
         return processCommand(parser.parse(input));
     }
 
@@ -158,10 +161,10 @@ public class Gihun456 {
                 return addTask(new Todo(arguments));
             }
             case DEADLINE: {
-                return addTask(parser.parseDeadline(arguments));
+                return addTaskConsideringConflicts(parser.parseDeadline(arguments));
             }
             case EVENT: {
-                return addTask(parser.parseEvent(arguments));
+                return addTaskConsideringConflicts(parser.parseEvent(arguments));
             }
             case REMINDERS:
                 if (!arguments.trim().isEmpty()) {
@@ -235,6 +238,54 @@ public class Gihun456 {
         tasks.add(task);
         saveTasks();
         return formatTaskAdded(task);
+    }
+
+    private String addTaskConsideringConflicts(Task task) throws GihunException {
+        List<TaskList.Conflict> conflicts = tasks.getConflicts(task);
+        if (conflicts.isEmpty()) {
+            return addTask(task);
+        }
+        pendingConfirmation = new PendingConfirmation(task, conflicts);
+        return formatConflictWarning(task, conflicts);
+    }
+
+    private String processConfirmation(String input) throws GihunException {
+        String response = input == null ? "" : input.trim();
+        if (response.equalsIgnoreCase("yes")) {
+            Task task = pendingConfirmation.task();
+            pendingConfirmation = null;
+            return addTask(task);
+        }
+        if (response.equalsIgnoreCase("no")) {
+            pendingConfirmation = null;
+            return UiMessages.TASK_NOT_ADDED;
+        }
+        if (response.equalsIgnoreCase("bye")) {
+            pendingConfirmation = null;
+            return UiMessages.FAREWELL;
+        }
+        throw new GihunException(ErrorMessages.INVALID_CONFIRMATION);
+    }
+
+    private String formatConflictWarning(Task task, List<TaskList.Conflict> conflicts) {
+        StringBuilder response = new StringBuilder();
+        response.append(UiMessages.CONFLICT_WARNING)
+                .append("\n")
+                .append(UiMessages.PROPOSED_TASK)
+                .append("\n")
+                .append(task)
+                .append("\n")
+                .append(UiMessages.CONFLICTING_TASKS);
+        for (TaskList.Conflict conflict : conflicts) {
+            response.append("\n")
+                    .append(conflict.taskNumber())
+                    .append(". ")
+                    .append(conflict.task());
+        }
+        return response.append("\n").append(UiMessages.CONFLICT_CONFIRMATION).toString();
+    }
+
+    private record PendingConfirmation(Task task, List<TaskList.Conflict> conflicts) {
     }
 
     /**

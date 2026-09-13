@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -199,5 +200,80 @@ public class TaskListTest {
 
         assertEquals(2, taskList.size());
         assertEquals(List.of(first, second), taskList.asList());
+    }
+
+    @Test
+    public void getConflicts_overlappingDatedTasks_returnsAllIncompleteConflicts() {
+        Deadline deadline = new Deadline("Deadline", LocalDateTime.of(2026, 9, 15, 10, 30));
+        Event event = new Event(
+                "Meeting",
+                LocalDateTime.of(2026, 9, 15, 10, 0),
+                LocalDateTime.of(2026, 9, 15, 11, 0));
+        Todo todo = new Todo("Todo");
+        TaskList taskList = new TaskList(deadline, event, todo);
+
+        List<TaskList.Conflict> conflicts = taskList.getConflicts(
+                new Event(
+                        "Workshop",
+                        LocalDateTime.of(2026, 9, 15, 10, 15),
+                        LocalDateTime.of(2026, 9, 15, 10, 45)));
+
+        assertEquals(List.of(1, 2), conflicts.stream().map(TaskList.Conflict::taskNumber).toList());
+    }
+
+    @Test
+    public void getConflicts_boundaryAndCompletedTasks_areIgnored() {
+        Event completed = new Event(
+                "Completed",
+                LocalDateTime.of(2026, 9, 15, 10, 0),
+                LocalDateTime.of(2026, 9, 15, 11, 0));
+        completed.markAsDone();
+        Event touching = new Event(
+                "Touching",
+                LocalDateTime.of(2026, 9, 15, 11, 0),
+                LocalDateTime.of(2026, 9, 15, 12, 0));
+        TaskList taskList = new TaskList(completed, touching);
+
+        List<TaskList.Conflict> conflicts = taskList.getConflicts(new Deadline(
+                "Deadline",
+                LocalDateTime.of(2026, 9, 15, 11, 0)));
+
+        assertTrue(conflicts.isEmpty());
+    }
+
+    @Test
+    public void getConflicts_malformedExistingEvent_isIgnored() {
+        Event malformed = new Event(
+                "Malformed",
+                LocalDateTime.of(2026, 9, 15, 11, 0),
+                LocalDateTime.of(2026, 9, 15, 10, 0));
+        TaskList taskList = new TaskList(malformed);
+
+        assertTrue(taskList.getConflicts(new Deadline(
+                "Deadline",
+                LocalDateTime.of(2026, 9, 15, 10, 30))).isEmpty());
+    }
+
+    @Test
+    public void getConflicts_equalDeadlineTimestamps_returnsConflict() {
+        Deadline existing = new Deadline("Existing", LocalDateTime.of(2026, 9, 15, 10, 0));
+        TaskList taskList = new TaskList(existing);
+
+        assertEquals(1, taskList.getConflicts(
+                new Deadline("New", LocalDateTime.of(2026, 9, 15, 10, 0))).size());
+    }
+
+    @Test
+    public void getConflicts_touchingEvents_returnsNoConflict() {
+        Event existing = new Event(
+                "Existing",
+                LocalDateTime.of(2026, 9, 15, 10, 0),
+                LocalDateTime.of(2026, 9, 15, 11, 0));
+        TaskList taskList = new TaskList(existing);
+
+        assertTrue(taskList.getConflicts(new Event(
+                "New",
+                LocalDateTime.of(2026, 9, 15, 11, 0),
+                LocalDateTime.of(2026, 9, 15, 12, 0))).isEmpty());
     }
 }
