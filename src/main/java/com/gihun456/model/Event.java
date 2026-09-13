@@ -3,6 +3,7 @@ package com.gihun456.model;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 import com.gihun456.ErrorMessages;
 import com.gihun456.GihunException;
@@ -13,7 +14,7 @@ import com.gihun456.util.DateTimeParser;
  */
 public class Event extends Task {
     private static final DateTimeFormatter DISPLAY_FORMATTER =
-            DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
+            DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a", Locale.ENGLISH);
     private final LocalDateTime startDate;
     private final LocalDateTime endDate;
 

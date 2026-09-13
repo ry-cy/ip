@@ -61,16 +61,16 @@ public class Gihun456Test {
             assertEquals(
                     "This task conflicts with existing tasks:\n"
                             + "Proposed task:\n"
-                            + "[D][ ] Submit report (by: Sept 15 2026, 10:30 am)\n"
+                            + "[D][ ] Submit report (by: Sep 15 2026, 10:30 AM)\n"
                             + "Conflicting tasks:\n"
-                            + "1. [E][ ] Team meeting (from: Sept 15 2026, 10:00 am to: Sept 15 2026, 11:00 am)\n"
+                            + "1. [E][ ] Team meeting (from: Sep 15 2026, 10:00 AM to: Sep 15 2026, 11:00 AM)\n"
                             + "Add it anyway? (yes/no)",
                     app.processCommand("deadline Submit report /by 15/09/2026 1030"));
             assertEquals(1, Files.readAllLines(dataFile).size());
 
             assertEquals(
                     "Got it. I've added this task:\n"
-                            + "[D][ ] Submit report (by: Sept 15 2026, 10:30 am)\n"
+                            + "[D][ ] Submit report (by: Sep 15 2026, 10:30 AM)\n"
                             + "Now you have 2 tasks in the list.",
                     app.processCommand(" YES "));
             assertEquals(2, Files.readAllLines(dataFile).size());
