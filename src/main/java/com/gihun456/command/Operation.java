@@ -12,6 +12,7 @@ public enum Operation {
     TODO("todo"),
     DEADLINE("deadline"),
     EVENT("event"),
+    REMINDERS("reminders"),
     LIST("list"),
     FIND("find"),
     MARK("mark"),

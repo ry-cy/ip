@@ -5,10 +5,10 @@ package com.gihun456.ui;
  */
 public final class UiMessages {
     public static final String BANNER = """
-                         __                    _   _  
-                        /__ o |_      ._ |_|_ |_  |_  
-                        \\_| | | | |_| | |  |   _) |_) 
-                               
+                         __                    _   _\s\s
+                        /__ o |_      ._ |_|_ |_  |_\s\s
+                        \\_| | | | |_| | |  |   _) |_)
+
                          """;
 
     public static final String GREETING = "Hello! I'm Gihun456.\nWhat can I do for you?";
@@ -23,6 +23,9 @@ public final class UiMessages {
     public static final String MARK_TASK = "Nice! I've marked this task as done:";
     public static final String UNMARK_TASK = "OK, I've marked this task as not done yet:";
     public static final String EMPTY_STORAGE = "Storage empty.";
+    public static final String UPCOMING_REMINDERS = "Upcoming deadlines/events:";
+    public static final String MISSED_REMINDERS = "Missed deadlines/events:";
+    public static final String NO_REMINDERS = "No upcoming or missed reminders.";
 
     private UiMessages() {
     }

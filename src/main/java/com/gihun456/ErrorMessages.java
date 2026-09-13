@@ -22,6 +22,7 @@ public final class ErrorMessages {
     public static final String EVENT_FROM_BEFORE_TO = "An event must specify '/from' before '/to'.";
     public static final String EVENT_START_DATE_EMPTY = "The start date of an event cannot be empty.";
     public static final String EVENT_END_DATE_EMPTY = "The end date of an event cannot be empty.";
+    public static final String REMINDERS_ARGUMENTS = "The reminders command does not accept arguments.";
 
     // TaskList
     public static final String INVALID_TASK_NUMBER = "The task number is invalid.";

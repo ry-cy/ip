@@ -1,30 +1,54 @@
 # Gihun456 User Guide
 
-// Update the title above to match the actual product name
+Gihun456 is a task manager for todos, deadlines, and events.
 
-// Product screenshot goes here
+## Commands
 
-// Product intro goes here
+Use the following commands:
+
+```text
+todo <description>
+deadline <description> /by <date>
+event <description> /from <date> /to <date>
+list
+find <keyword>
+mark <task number>
+unmark <task number>
+delete <task number>
+reminders
+bye
+```
+
+## Reminders
+
+On startup, Gihun456 reports incomplete deadlines and events that are due within
+the next 72 hours, inclusive. It also reports all incomplete deadlines and events
+whose relevant time has passed.
+
+For deadlines, the due date is used. For events, the start date is used.
+Completed tasks are not reported. Events display their complete start-to-end range.
+
+You can request the same report at any time with:
+
+```text
+reminders
+```
+
+The command does not accept arguments:
+
+```text
+reminders tomorrow
+```
+
+Date-only deadline input continues to mean midnight on that date.
 
 ## Adding deadlines
 
-// Describe the action and its outcome.
+Example:
 
-// Give examples of usage
-
-Example: `keyword (optional arguments)`
-
-// A description of the expected outcome goes here
-
-```
-expected output
+```text
+deadline Submit project report /by 15/09/2026 1900
 ```
 
-## Feature ABC
-
-// Feature details
-
-
-## Feature XYZ
-
-// Feature details
+The supported date formats are `dd/MM/yyyy` and `yyyy-MM-dd`, optionally
+followed by a space and `HHmm`.

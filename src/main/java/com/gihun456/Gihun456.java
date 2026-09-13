@@ -1,5 +1,6 @@
 package com.gihun456;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,6 +9,7 @@ import com.gihun456.command.Parser;
 import com.gihun456.model.Task;
 import com.gihun456.model.TaskList;
 import com.gihun456.model.Todo;
+import com.gihun456.reminder.ReminderService;
 import com.gihun456.storage.Storage;
 import com.gihun456.ui.Ui;
 import com.gihun456.ui.UiMessages;
@@ -22,6 +24,7 @@ public class Gihun456 {
     private final TaskList tasks;
     private final Parser parser;
     private final Storage storage;
+    private final ReminderService reminderService;
 
     /**
      * Creates an application instance backed by the given data file.
@@ -29,10 +32,21 @@ public class Gihun456 {
      * @param filePath Path to the persistent task storage file.
      */
     public Gihun456(String filePath) {
+        this(filePath, Clock.systemDefaultZone());
+    }
+
+    /**
+     * Creates an application instance with an injectable clock.
+     *
+     * @param filePath Path to the persistent task storage file.
+     * @param clock Clock used for reminder evaluation.
+     */
+    public Gihun456(String filePath, Clock clock) {
         this.ui = new Ui();
         this.tasks = new TaskList();
         this.parser = new Parser();
         this.storage = new Storage(filePath);
+        this.reminderService = new ReminderService(clock);
     }
 
     public Gihun456() {
@@ -50,6 +64,23 @@ public class Gihun456 {
     }
 
     /**
+     * Returns the current reminder report without an empty-report message.
+     *
+     * @return Formatted reminder report, or an empty string when no reminders apply.
+     */
+    public String getReminderReport() {
+        return reminderService.formatReport(tasks.asList());
+    }
+
+    private void showStartupReminders() {
+        String reminderReport = getReminderReport();
+        if (!reminderReport.isEmpty()) {
+            System.out.println(reminderReport);
+            ui.showLine();
+        }
+    }
+
+    /**
      * Runs the application's main command loop.
      */
     public void run() {
@@ -62,6 +93,7 @@ public class Gihun456 {
             ui.showError(ge.getMessage());
             return;
         }
+        showStartupReminders();
 
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
@@ -131,6 +163,12 @@ public class Gihun456 {
             case EVENT: {
                 return addTask(parser.parseEvent(arguments));
             }
+            case REMINDERS:
+                if (!arguments.trim().isEmpty()) {
+                    throw new GihunException(ErrorMessages.REMINDERS_ARGUMENTS);
+                }
+                String reminderReport = getReminderReport();
+                return reminderReport.isEmpty() ? UiMessages.NO_REMINDERS : reminderReport;
             case LIST:
                 return tasks.isEmpty() ? UiMessages.EMPTY_STORAGE : formatTaskList(tasks.asList(), false);
             case FIND:
