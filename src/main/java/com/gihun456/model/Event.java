@@ -29,6 +29,9 @@ public class Event extends Task {
         super(taskName);
         this.startDate = parseDateTime(startDateText);
         this.endDate = parseDateTime(endDateText);
+        if (endDate.isBefore(startDate)) {
+            throw new GihunException(ErrorMessages.EVENT_END_BEFORE_START);
+        }
     }
 
     /**

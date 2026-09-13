@@ -1,5 +1,6 @@
 package com.gihun456;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,6 +9,7 @@ import com.gihun456.command.Parser;
 import com.gihun456.model.Task;
 import com.gihun456.model.TaskList;
 import com.gihun456.model.Todo;
+import com.gihun456.reminder.ReminderService;
 import com.gihun456.storage.Storage;
 import com.gihun456.ui.Ui;
 import com.gihun456.ui.UiMessages;
@@ -22,6 +24,8 @@ public class Gihun456 {
     private final TaskList tasks;
     private final Parser parser;
     private final Storage storage;
+    private final ReminderService reminderService;
+    private PendingConfirmation pendingConfirmation;
 
     /**
      * Creates an application instance backed by the given data file.
@@ -29,10 +33,21 @@ public class Gihun456 {
      * @param filePath Path to the persistent task storage file.
      */
     public Gihun456(String filePath) {
+        this(filePath, Clock.systemDefaultZone());
+    }
+
+    /**
+     * Creates an application instance with an injectable clock.
+     *
+     * @param filePath Path to the persistent task storage file.
+     * @param clock Clock used for reminder evaluation.
+     */
+    public Gihun456(String filePath, Clock clock) {
         this.ui = new Ui();
         this.tasks = new TaskList();
         this.parser = new Parser();
         this.storage = new Storage(filePath);
+        this.reminderService = new ReminderService(clock);
     }
 
     public Gihun456() {
@@ -50,6 +65,23 @@ public class Gihun456 {
     }
 
     /**
+     * Returns the current reminder report without an empty-report message.
+     *
+     * @return Formatted reminder report, or an empty string when no reminders apply.
+     */
+    public String getReminderReport() {
+        return reminderService.formatReport(tasks.asList());
+    }
+
+    private void showStartupReminders() {
+        String reminderReport = getReminderReport();
+        if (!reminderReport.isEmpty()) {
+            System.out.println(reminderReport);
+            ui.showLine();
+        }
+    }
+
+    /**
      * Runs the application's main command loop.
      */
     public void run() {
@@ -62,15 +94,15 @@ public class Gihun456 {
             ui.showError(ge.getMessage());
             return;
         }
+        showStartupReminders();
 
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
 
             try {
-                Parser.ParsedInput parsedInput = parser.parse(input);
-                String response = processCommand(parsedInput);
+                String response = processCommand(input);
                 System.out.println(response);
-                if (parsedInput.getOperation() == Operation.BYE) {
+                if (input.trim().equalsIgnoreCase("bye")) {
                     return;
                 }
             } catch (GihunException ge) {
@@ -104,6 +136,9 @@ public class Gihun456 {
      * @throws GihunException If the command is invalid or cannot be completed.
      */
     public String processCommand(String input) throws GihunException {
+        if (pendingConfirmation != null) {
+            return processConfirmation(input);
+        }
         return processCommand(parser.parse(input));
     }
 
@@ -126,11 +161,17 @@ public class Gihun456 {
                 return addTask(new Todo(arguments));
             }
             case DEADLINE: {
-                return addTask(parser.parseDeadline(arguments));
+                return addTaskConsideringConflicts(parser.parseDeadline(arguments));
             }
             case EVENT: {
-                return addTask(parser.parseEvent(arguments));
+                return addTaskConsideringConflicts(parser.parseEvent(arguments));
             }
+            case REMINDERS:
+                if (!arguments.trim().isEmpty()) {
+                    throw new GihunException(ErrorMessages.REMINDERS_ARGUMENTS);
+                }
+                String reminderReport = getReminderReport();
+                return reminderReport.isEmpty() ? UiMessages.NO_REMINDERS : reminderReport;
             case LIST:
                 return tasks.isEmpty() ? UiMessages.EMPTY_STORAGE : formatTaskList(tasks.asList(), false);
             case FIND:
@@ -197,6 +238,54 @@ public class Gihun456 {
         tasks.add(task);
         saveTasks();
         return formatTaskAdded(task);
+    }
+
+    private String addTaskConsideringConflicts(Task task) throws GihunException {
+        List<TaskList.Conflict> conflicts = tasks.getConflicts(task);
+        if (conflicts.isEmpty()) {
+            return addTask(task);
+        }
+        pendingConfirmation = new PendingConfirmation(task, conflicts);
+        return formatConflictWarning(task, conflicts);
+    }
+
+    private String processConfirmation(String input) throws GihunException {
+        String response = input == null ? "" : input.trim();
+        if (response.equalsIgnoreCase("yes")) {
+            Task task = pendingConfirmation.task();
+            pendingConfirmation = null;
+            return addTask(task);
+        }
+        if (response.equalsIgnoreCase("no")) {
+            pendingConfirmation = null;
+            return UiMessages.TASK_NOT_ADDED;
+        }
+        if (response.equalsIgnoreCase("bye")) {
+            pendingConfirmation = null;
+            return UiMessages.FAREWELL;
+        }
+        throw new GihunException(ErrorMessages.INVALID_CONFIRMATION);
+    }
+
+    private String formatConflictWarning(Task task, List<TaskList.Conflict> conflicts) {
+        StringBuilder response = new StringBuilder();
+        response.append(UiMessages.CONFLICT_WARNING)
+                .append("\n")
+                .append(UiMessages.PROPOSED_TASK)
+                .append("\n")
+                .append(task)
+                .append("\n")
+                .append(UiMessages.CONFLICTING_TASKS);
+        for (TaskList.Conflict conflict : conflicts) {
+            response.append("\n")
+                    .append(conflict.taskNumber())
+                    .append(". ")
+                    .append(conflict.task());
+        }
+        return response.append("\n").append(UiMessages.CONFLICT_CONFIRMATION).toString();
+    }
+
+    private record PendingConfirmation(Task task, List<TaskList.Conflict> conflicts) {
     }
 
     /**

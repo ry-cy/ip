@@ -179,4 +179,63 @@ public class TaskList {
     public List<Task> asList() {
         return new ArrayList<>(tasks);
     }
+
+    /**
+     * Finds incomplete dated tasks that clash with a candidate dated task.
+     *
+     * @param candidate New deadline or event to compare against the list.
+     * @return Conflicting tasks in their original task-list order.
+     */
+    public List<Conflict> getConflicts(Task candidate) {
+        assert candidate instanceof Deadline || candidate instanceof Event
+                : "Conflict detection requires a deadline or event candidate";
+
+        List<Conflict> conflicts = new ArrayList<>();
+        for (int i = 0; i < tasks.size(); i++) {
+            Task existing = tasks.get(i);
+            if (!existing.isDone() && conflicts(candidate, existing)) {
+                conflicts.add(new Conflict(i + 1, existing));
+            }
+        }
+        return conflicts;
+    }
+
+    private boolean conflicts(Task first, Task second) {
+        if (first instanceof Deadline firstDeadline && second instanceof Deadline secondDeadline) {
+            return firstDeadline.getDueDate().equals(secondDeadline.getDueDate());
+        }
+        if (first instanceof Deadline firstDeadline && second instanceof Event secondEvent) {
+            return isStrictlyInside(firstDeadline.getDueDate(), secondEvent);
+        }
+        if (first instanceof Event firstEvent && second instanceof Deadline secondDeadline) {
+            return isStrictlyInside(secondDeadline.getDueDate(), firstEvent);
+        }
+        if (!(first instanceof Event) || !(second instanceof Event)) {
+            return false;
+        }
+        Event firstEvent = (Event) first;
+        Event secondEvent = (Event) second;
+        if (firstEvent.getEndDate().isBefore(firstEvent.getStartDate())
+                || secondEvent.getEndDate().isBefore(secondEvent.getStartDate())) {
+            return false;
+        }
+        return firstEvent.getStartDate().isBefore(secondEvent.getEndDate())
+                && secondEvent.getStartDate().isBefore(firstEvent.getEndDate());
+    }
+
+    private boolean isStrictlyInside(java.time.LocalDateTime timestamp, Event event) {
+        if (event.getEndDate().isBefore(event.getStartDate())) {
+            return false;
+        }
+        return event.getStartDate().isBefore(timestamp) && timestamp.isBefore(event.getEndDate());
+    }
+
+    /**
+     * Associates a conflicting task with its original one-based task number.
+     *
+     * @param taskNumber Original task-list number.
+     * @param task Conflicting task.
+     */
+    public record Conflict(int taskNumber, Task task) {
+    }
 }

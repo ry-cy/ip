@@ -29,6 +29,9 @@ public class MainWindow extends AnchorPane {
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/GihunUser.png"));
     private Image gihunImage = new Image(this.getClass().getResourceAsStream("/images/GihunBot.png"));
 
+    /**
+     * Initializes the dialog container with the banner and greeting messages.
+     */
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
@@ -39,10 +42,14 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Injects the Gihun456 instance. 
+     * Injects the Gihun456 instance.
      */
     public void setGihun(Gihun456 g) {
         gihun = g;
+        String reminderReport = gihun.getReminderReport();
+        if (!reminderReport.isEmpty()) {
+            dialogContainer.getChildren().add(DialogBox.getGihunDialog(reminderReport, gihunImage));
+        }
     }
 
     /**
