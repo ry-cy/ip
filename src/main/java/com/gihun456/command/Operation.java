@@ -1,5 +1,7 @@
 package com.gihun456.command;
 
+import java.util.Arrays;
+
 import com.gihun456.ErrorMessages;
 import com.gihun456.GihunException;
 
@@ -31,12 +33,9 @@ public enum Operation {
      * @throws GihunException If the command is not a supported action.
      */
     public static Operation fromInput(String input) throws GihunException {
-        for (Operation operation : Operation.values()) {
-            if (operation.operationText.equalsIgnoreCase(input)) {
-                return operation;
-            }
-        }
-
-        throw new GihunException(ErrorMessages.invalidOperation(input));
+        return Arrays.stream(Operation.values())
+                .filter(operation -> operation.operationText.equalsIgnoreCase(input))
+                .findFirst()
+                .orElseThrow(() -> new GihunException(ErrorMessages.invalidOperation(input)));
     }
 }

@@ -3,6 +3,7 @@ package com.gihun456.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.gihun456.ErrorMessages;
 import com.gihun456.GihunException;
@@ -125,16 +126,9 @@ public class TaskList {
         }
 
         String normalizedKey = matchingKey.trim().toLowerCase();
-        List<Task> result = new ArrayList<>();
-
-        for (Task task : tasks) {
-            String taskName = task.getTaskName();
-            if (taskName.toLowerCase().contains(normalizedKey)) {
-                result.add(task);
-            }
-        }
-
-        return result;
+        return tasks.stream()
+                .filter(task -> task.getTaskName().toLowerCase().contains(normalizedKey))
+                .collect(Collectors.toList());
     }
 
     /**
