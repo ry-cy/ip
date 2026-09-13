@@ -137,6 +137,8 @@ public class TaskList {
      * @param index Zero-based index of the task to mark.
      */
     public void markTask(int index) {
+        assert index >= 0 && index < tasks.size()
+                : "markTask requires an index validated against the task list";
         tasks.get(index).markAsDone();
     }
 
@@ -146,6 +148,8 @@ public class TaskList {
      * @param index Zero-based index of the task to unmark.
      */
     public void unmarkTask(int index) {
+        assert index >= 0 && index < tasks.size()
+                : "unmarkTask requires an index validated against the task list";
         tasks.get(index).markAsNotDone();
     }
 

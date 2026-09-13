@@ -67,9 +67,10 @@ public class Gihun456 {
             String input = scanner.nextLine();
 
             try {
-                String response = processCommand(input);
+                Parser.ParsedInput parsedInput = parser.parse(input);
+                String response = processCommand(parsedInput);
                 System.out.println(response);
-                if (parser.parse(input).getOperation() == Operation.BYE) {
+                if (parsedInput.getOperation() == Operation.BYE) {
                     return;
                 }
             } catch (GihunException ge) {
@@ -103,7 +104,17 @@ public class Gihun456 {
      * @throws GihunException If the command is invalid or cannot be completed.
      */
     public String processCommand(String input) throws GihunException {
-        Parser.ParsedInput parsedInput = parser.parse(input);
+        return processCommand(parser.parse(input));
+    }
+
+    /**
+     * Executes a previously parsed command.
+     *
+     * @param parsedInput Parsed command and its arguments.
+     * @return User-facing command response.
+     * @throws GihunException If the command is invalid or cannot be completed.
+     */
+    private String processCommand(Parser.ParsedInput parsedInput) throws GihunException {
         Operation operation = parsedInput.getOperation();
         String arguments = parsedInput.getArguments();
 
@@ -112,22 +123,13 @@ public class Gihun456 {
                 if (arguments.trim().isEmpty()) {
                     throw new GihunException(ErrorMessages.TODO_DESCRIPTION_EMPTY);
                 }
-                Task newTask = new Todo(arguments);
-                tasks.add(newTask);
-                storage.save(tasks.asList());
-                return formatTaskAdded(newTask);
+                return addTask(new Todo(arguments));
             }
             case DEADLINE: {
-                Task newTask = parser.parseDeadline(arguments);
-                tasks.add(newTask);
-                storage.save(tasks.asList());
-                return formatTaskAdded(newTask);
+                return addTask(parser.parseDeadline(arguments));
             }
             case EVENT: {
-                Task newTask = parser.parseEvent(arguments);
-                tasks.add(newTask);
-                storage.save(tasks.asList());
-                return formatTaskAdded(newTask);
+                return addTask(parser.parseEvent(arguments));
             }
             case LIST:
                 return tasks.isEmpty() ? UiMessages.EMPTY_STORAGE : formatTaskList(tasks.asList(), false);
@@ -143,14 +145,14 @@ public class Gihun456 {
                 int index = tasks.getValidIndex(arguments);
                 Task task = tasks.get(index);
                 tasks.markTask(index);
-                storage.save(tasks.asList());
+                saveTasks();
                 return UiMessages.MARK_TASK + "\n" + task;
             }
             case UNMARK: {
                 int index = tasks.getValidIndex(arguments);
                 Task task = tasks.get(index);
                 tasks.unmarkTask(index);
-                storage.save(tasks.asList());
+                saveTasks();
                 return UiMessages.UNMARK_TASK + "\n" + task;
             }
             case DELETE: {
@@ -159,7 +161,7 @@ public class Gihun456 {
                 }
                 int index = tasks.getValidIndex(arguments);
                 Task task = tasks.remove(index);
-                storage.save(tasks.asList());
+                saveTasks();
                 return UiMessages.REMOVE_TASK + "\n" + task
                         + "\nNow you have " + tasks.size() + " tasks in the list.";
             }
@@ -182,6 +184,28 @@ public class Gihun456 {
         } catch (GihunException e) {
             return ErrorMessages.ERROR_PREFIX + e.getMessage();
         }
+    }
+
+    /**
+     * Adds a task, persists the updated list, and formats the confirmation response.
+     *
+     * @param task Task to add.
+     * @return User-facing confirmation response.
+     * @throws GihunException If the updated task list cannot be saved.
+     */
+    private String addTask(Task task) throws GihunException {
+        tasks.add(task);
+        saveTasks();
+        return formatTaskAdded(task);
+    }
+
+    /**
+     * Persists the current in-memory task list.
+     *
+     * @throws GihunException If the task list cannot be saved.
+     */
+    private void saveTasks() throws GihunException {
+        storage.save(tasks.asList());
     }
 
     private String formatTaskAdded(Task task) {
