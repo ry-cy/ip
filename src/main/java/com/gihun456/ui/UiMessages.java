@@ -4,6 +4,8 @@ package com.gihun456.ui;
  * Stores user-facing messages displayed by the application.
  */
 public final class UiMessages {
+    public static final String PRODUCT_NAME = "Gihun456";
+
     public static final String BANNER = """
                          __                    _   _\s\s
                         /__ o |_      ._ |_|_ |_  |_\s\s
@@ -11,7 +13,7 @@ public final class UiMessages {
 
                          """;
 
-    public static final String GREETING = "Hello! I'm Gihun456.\nAre you ready to play a game?";
+    public static final String GREETING = "Hello! I'm " + PRODUCT_NAME + ".\nAre you ready to play a game?";
     public static final String FAREWELL = "Player 456 eliminated.";
     public static final String SEP = "____________________________________________________________";
 

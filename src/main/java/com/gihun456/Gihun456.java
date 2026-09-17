@@ -224,6 +224,8 @@ public class Gihun456 {
             return processCommand(input);
         } catch (GihunException e) {
             return ErrorMessages.ERROR_PREFIX + e.getMessage();
+        } catch (RuntimeException e) {
+            return ErrorMessages.ERROR_PREFIX + ErrorMessages.UNEXPECTED_ERROR;
         }
     }
 

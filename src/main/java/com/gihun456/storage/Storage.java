@@ -45,7 +45,10 @@ public class Storage {
     public void save(List<Task> tasks) throws GihunException {
         assert tasks != null : "Storage cannot save a null task list";
         try {
-            Files.createDirectories(taskFile.getParent());
+            Path parentDirectory = taskFile.getParent();
+            if (parentDirectory != null) {
+                Files.createDirectories(parentDirectory);
+            }
 
             StringBuilder contents = new StringBuilder();
             for (Task task : tasks) {

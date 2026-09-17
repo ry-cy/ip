@@ -62,7 +62,7 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Creates two dialog boxes, one echoing user input and the other containing Duke's reply and then appends them to
+     * Creates two dialog boxes, one echoing user input and the other containing the bot's reply, then appends them to
      * the dialog container. Clears the user input after processing.
      */
     @FXML
@@ -82,6 +82,16 @@ public class MainWindow extends AnchorPane {
             exitDelay.setOnFinished(event -> Platform.exit());
             exitDelay.play();
         }
+    }
+
+    /**
+     * Displays an error that occurred while preparing the application.
+     *
+     * @param message Error message to display.
+     */
+    public void showError(String message) {
+        dialogContainer.getChildren().add(
+                DialogBox.getGihunDialog(ErrorMessages.ERROR_PREFIX + message, gihunImage, "error-label"));
     }
 
     private String getResponseStyle(String response) {

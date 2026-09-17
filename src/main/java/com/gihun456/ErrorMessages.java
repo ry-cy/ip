@@ -22,7 +22,8 @@ public final class ErrorMessages {
     public static final String EVENT_FROM_BEFORE_TO = "This game must specify '/from' before '/to'.";
     public static final String EVENT_START_DATE_EMPTY = "This game needs a starting date.";
     public static final String EVENT_END_DATE_EMPTY = "This game needs an ending date.";
-    public static final String EVENT_END_BEFORE_START = "That doesn't work, Player 456. The game can't end before it starts.";
+    public static final String EVENT_END_BEFORE_START =
+            "That doesn't work, Player 456. The game can't end before it starts.";
     public static final String REMINDERS_ARGUMENTS = "This game does not accept arguments.";
 
     // TaskList

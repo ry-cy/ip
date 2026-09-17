@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.gihun456.Gihun456;
 import com.gihun456.GihunException;
+import com.gihun456.ui.UiMessages;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,23 +22,33 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
+        String startupError = null;
         try {
             gihun.loadTasks();
-            stage.setMinHeight(420);
-            stage.setMinWidth(600);
-            stage.setWidth(800);
-            stage.setHeight(1000);
-            stage.setTitle("Gihun456");
-            stage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/GihunBot.png")));
+        } catch (GihunException e) {
+            startupError = e.getMessage();
+        }
 
+        stage.setMinHeight(420);
+        stage.setMinWidth(600);
+        stage.setWidth(800);
+        stage.setHeight(1000);
+        stage.setTitle(UiMessages.PRODUCT_NAME);
+        stage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/GihunBot.png")));
+
+        try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
-            fxmlLoader.<MainWindow>getController().setGihun(gihun); // inject the Gihun456 instance
+            MainWindow mainWindow = fxmlLoader.getController();
+            mainWindow.setGihun(gihun);
+            if (startupError != null) {
+                mainWindow.showError(startupError);
+            }
             stage.show();
-        } catch (IOException | GihunException e) {
-            throw new IllegalStateException("Unable to start Gihun456.", e);
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to start " + UiMessages.PRODUCT_NAME + ".", e);
         }
     }
 }
