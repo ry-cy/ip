@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import com.gihun456.model.Deadline;
 import com.gihun456.model.Event;
 import com.gihun456.model.Todo;
+import com.gihun456.ui.UiMessages;
 
 public class ReminderServiceTest {
     private static final LocalDateTime NOW = LocalDateTime.of(2026, 9, 13, 19, 37);
@@ -27,7 +28,7 @@ public class ReminderServiceTest {
         String report = reminderService.formatReport(List.of(deadline));
 
         assertEquals(
-                "Upcoming deadlines/events:\n"
+                UiMessages.UPCOMING_REMINDERS + "\n"
                         + "1. [Deadline] Submit report (by: Sep 16 2026, 7:37 PM)",
                 report);
     }
@@ -39,7 +40,7 @@ public class ReminderServiceTest {
         String report = reminderService.formatReport(List.of(deadline));
 
         assertEquals(
-                "Missed deadlines/events:\n"
+                UiMessages.MISSED_REMINDERS + "\n"
                         + "1. [Deadline] Submit report (by: Sep 09 2026, 7:37 PM)",
                 report);
     }
@@ -61,7 +62,7 @@ public class ReminderServiceTest {
         String report = reminderService.formatReport(List.of(todo, event));
 
         assertEquals(
-                "Upcoming deadlines/events:\n"
+                UiMessages.UPCOMING_REMINDERS + "\n"
                         + "2. [Event] Team meeting (from: Sep 13 2026, 8:37 PM to: Sep 13 2026, 9:37 PM)",
                 report);
     }
@@ -74,9 +75,24 @@ public class ReminderServiceTest {
         String report = reminderService.formatReport(List.of(first, second));
 
         assertEquals(
-                "Upcoming deadlines/events:\n"
+                UiMessages.UPCOMING_REMINDERS + "\n"
                         + "1. [Deadline] First (by: Sep 13 2026, 8:37 PM)\n"
                         + "2. [Deadline] Second (by: Sep 13 2026, 8:37 PM)",
+                report);
+    }
+
+    @Test
+    public void formatReport_upcomingAndMissedTasks_includesBothGameSections() {
+        Deadline upcoming = new Deadline("Upcoming", NOW.plusHours(1));
+        Event missed = new Event("Missed", NOW.minusHours(1), NOW.plusHours(1));
+
+        String report = reminderService.formatReport(List.of(upcoming, missed));
+
+        assertEquals(
+                UiMessages.UPCOMING_REMINDERS + "\n"
+                        + "1. [Deadline] Upcoming (by: Sep 13 2026, 8:37 PM)\n\n"
+                        + UiMessages.MISSED_REMINDERS + "\n"
+                        + "2. [Event] Missed (from: Sep 13 2026, 6:37 PM to: Sep 13 2026, 8:37 PM)",
                 report);
     }
 }
