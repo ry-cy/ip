@@ -71,7 +71,7 @@ public class Gihun456Test {
             assertEquals(
                     "Got it. I've added this task:\n"
                             + "[D][ ] Submit report (by: Sep 15 2026, 10:30 AM)\n"
-                            + "Now you have 2 tasks in the list.",
+                            + "Player 456, you now have 2 games in your list.",
                     app.processCommand(" YES "));
             assertEquals(2, Files.readAllLines(dataFile).size());
         } finally {

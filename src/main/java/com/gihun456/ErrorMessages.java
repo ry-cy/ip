@@ -5,45 +5,47 @@ package com.gihun456;
  */
 public final class ErrorMessages {
     // Gihun456
-    public static final String TODO_DESCRIPTION_EMPTY = "The description of a todo cannot be empty.";
-    public static final String UNSUPPORTED_OPERATION = "Unsupported operation.";
-    public static final String UNEXPECTED_ERROR = "An unexpected error occurred. Please try again.";
+    public static final String TODO_DESCRIPTION_EMPTY = "Player 456, this game needs a description.";
+    public static final String UNSUPPORTED_OPERATION = "That game isn't available.";
+    public static final String UNEXPECTED_ERROR = "Something went wrong. Let's try that again, Player 456.";
 
     // Ui
     public static final String ERROR_PREFIX = "ERROR: ";
 
     // Parser
-    public static final String EMPTY_COMMAND = "Empty command.";
-    public static final String DEADLINE_DESCRIPTION_EMPTY = "The description of a deadline cannot be empty.";
-    public static final String DEADLINE_BY_MISSING = "A deadline must include '/by'.";
-    public static final String DEADLINE_DUE_DATE_EMPTY = "The due date of a deadline cannot be empty.";
-    public static final String EVENT_DESCRIPTION_EMPTY = "The description of an event cannot be empty.";
-    public static final String EVENT_FROM_TO_MISSING = "An event must include '/from' and '/to'.";
-    public static final String EVENT_FROM_BEFORE_TO = "An event must specify '/from' before '/to'.";
-    public static final String EVENT_START_DATE_EMPTY = "The start date of an event cannot be empty.";
-    public static final String EVENT_END_DATE_EMPTY = "The end date of an event cannot be empty.";
-    public static final String EVENT_END_BEFORE_START = "An event must end at or after its start date.";
-    public static final String REMINDERS_ARGUMENTS = "The reminders command does not accept arguments.";
+    public static final String EMPTY_COMMAND = "Red light, you need to enter a command, Player 456.";
+    public static final String DEADLINE_DESCRIPTION_EMPTY = "Player 456, this game needs a description.";
+    public static final String DEADLINE_BY_MISSING = "This game needs a '/by'.";
+    public static final String DEADLINE_DUE_DATE_EMPTY = "The due date of this game cannot be empty.";
+    public static final String EVENT_DESCRIPTION_EMPTY = "Player 456, this game needs a description.";
+    public static final String EVENT_FROM_TO_MISSING = "This game needs both '/from' and '/to'.";
+    public static final String EVENT_FROM_BEFORE_TO = "This game must specify '/from' before '/to'.";
+    public static final String EVENT_START_DATE_EMPTY = "This game needs a starting date.";
+    public static final String EVENT_END_DATE_EMPTY = "This game needs an ending date.";
+    public static final String EVENT_END_BEFORE_START = "That doesn't work, Player 456. The game can't end before it starts.";
+    public static final String REMINDERS_ARGUMENTS = "This game does not accept arguments.";
 
     // TaskList
-    public static final String INVALID_TASK_NUMBER = "The task number is invalid.";
+    public static final String INVALID_TASK_NUMBER = "This isn't a valid game number.";
     public static final String EMPTY_KEYWORD = "The keyword cannot be empty.";
 
     // Deadline
-    public static final String DEADLINE_DATE_EMPTY = "Deadline date cannot be empty.";
+    public static final String DEADLINE_DATE_EMPTY = "The due date of this game cannot be empty.";
     public static final String INVALID_DEADLINE_FORMAT =
-            "Invalid deadline format. Please use dd/MM/yyyy or yyyy-MM-dd, optionally followed by a space and HHmm.";
+            "Careful, Player 456. This game requires the following date format: "
+        + "dd/MM/yyyy or yyyy-MM-dd, optionally followed by HHmm.";
 
     // Event
-    public static final String EVENT_DATE_EMPTY = "Event date cannot be empty.";
+    public static final String EVENT_DATE_EMPTY = "The date of this game cannot be empty.";
     public static final String INVALID_EVENT_DATE_FORMAT =
-            "Invalid event date format. Please use dd/MM/yyyy or yyyy-MM-dd, optionally followed by a space and HHmm.";
+            "Careful, Player 456. This game requires the following date format: "
+        + "dd/MM/yyyy or yyyy-MM-dd, optionally followed by HHmm.";
     public static final String INVALID_CONFIRMATION =
-            "Please answer 'yes' or 'no' to confirm adding the conflicting task.";
+            "It's your turn, Player 456. Please answer 'yes' or 'no'.";
 
     // Storage
-    public static final String CANNOT_ACCESS_FILE = "Unable to access tasks file.";
-    public static final String CANNOT_PARSE_TASK = "Unable to parse task.";
+    public static final String CANNOT_ACCESS_FILE = "Unable to access games list.";
+    public static final String CANNOT_PARSE_TASK = "Unable to parse game.";
 
     private ErrorMessages() {
     }
@@ -56,6 +58,6 @@ public final class ErrorMessages {
      * @return Error message containing the invalid command.
      */
     public static String invalidOperation(String input) {
-        return "Invalid operation: " + input;
+        return "Player 456, that game isn't available: " + input;
     }
 }

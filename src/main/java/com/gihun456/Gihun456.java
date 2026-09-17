@@ -204,7 +204,7 @@ public class Gihun456 {
                 Task task = tasks.remove(index);
                 saveTasks();
                 return UiMessages.REMOVE_TASK + "\n" + task
-                        + "\nNow you have " + tasks.size() + " tasks in the list.";
+                        + "\n" + UiMessages.getTaskCountMessage(tasks.size());
             }
             case BYE:
                 return UiMessages.FAREWELL;
@@ -299,7 +299,7 @@ public class Gihun456 {
 
     private String formatTaskAdded(Task task) {
         return UiMessages.ADD_TASK + "\n" + task
-                + "\nNow you have " + tasks.size() + " tasks in the list.";
+                + "\n" + UiMessages.getTaskCountMessage(tasks.size());
     }
 
     private String formatTaskList(List<Task> taskList, boolean isMatching) {

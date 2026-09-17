@@ -86,7 +86,7 @@ public class Ui {
     public void showTaskAdded(Task task, int taskCount) {
         System.out.println(UiMessages.ADD_TASK);
         System.out.println(task.toString());
-        System.out.println(String.format("Now you have %d tasks in the list.", taskCount));
+        System.out.println(UiMessages.getTaskCountMessage(taskCount));
         showLine();
     }
 
@@ -99,7 +99,7 @@ public class Ui {
     public void showTaskRemoved(Task task, int taskCount) {
         System.out.println(UiMessages.REMOVE_TASK);
         System.out.println(task.toString());
-        System.out.println(String.format("Now you have %d tasks in the list.", taskCount));
+        System.out.println(UiMessages.getTaskCountMessage(taskCount));
         showLine();
     }
 
