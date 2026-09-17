@@ -1,10 +1,14 @@
 package com.gihun456.gui;
 
+import com.gihun456.ErrorMessages;
 import com.gihun456.Gihun456;
 import com.gihun456.ui.UiMessages;
 
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -22,6 +26,8 @@ public class MainWindow extends AnchorPane {
     @FXML
     private TextField userInput;
     @FXML
+    private Label inputHint;
+    @FXML
     private Button sendButton;
 
     private Gihun456 gihun;
@@ -35,9 +41,11 @@ public class MainWindow extends AnchorPane {
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        userInput.textProperty().addListener((observable, oldValue, newValue) ->
+                inputHint.setVisible(newValue.isEmpty()));
         dialogContainer.getChildren().addAll(
                 DialogBox.getGihunBannerDialog(UiMessages.BANNER, gihunImage),
-                DialogBox.getGihunDialog(UiMessages.GREETING, gihunImage)
+                DialogBox.getGihunDialog(UiMessages.GREETING, gihunImage, "standard-label")
         );
     }
 
@@ -48,7 +56,8 @@ public class MainWindow extends AnchorPane {
         gihun = g;
         String reminderReport = gihun.getReminderReport();
         if (!reminderReport.isEmpty()) {
-            dialogContainer.getChildren().add(DialogBox.getGihunDialog(reminderReport, gihunImage));
+            dialogContainer.getChildren().add(
+                    DialogBox.getGihunDialog(reminderReport, gihunImage, "list-label"));
         }
     }
 
@@ -62,13 +71,44 @@ public class MainWindow extends AnchorPane {
         String response = gihun.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getGihunDialog(response, gihunImage)
+                DialogBox.getGihunDialog(response, gihunImage, getResponseStyle(response))
         );
         userInput.clear();
 
         if (input.trim().equalsIgnoreCase("bye")) {
             userInput.setDisable(true);
             sendButton.setDisable(true);
+            PauseTransition exitDelay = new PauseTransition(javafx.util.Duration.seconds(5));
+            exitDelay.setOnFinished(event -> Platform.exit());
+            exitDelay.play();
         }
+    }
+
+    private String getResponseStyle(String response) {
+        if (response.startsWith(ErrorMessages.ERROR_PREFIX)) {
+            return "error-label";
+        }
+        if (response.startsWith(UiMessages.CONFLICT_WARNING)) {
+            return "warning-label";
+        }
+        if (response.startsWith(UiMessages.UPCOMING_REMINDERS)
+                || response.startsWith(UiMessages.MISSED_REMINDERS)) {
+            return "reminder-label";
+        }
+        if (response.startsWith(UiMessages.LIST_TASKS)
+                || response.startsWith(UiMessages.LIST_MATCHING_TASKS)
+                || response.equals(UiMessages.NO_MATCHING_TASKS)) {
+            return "list-label";
+        }
+        if (response.startsWith(UiMessages.ADD_TASK)) {
+            return "add-label";
+        }
+        if (response.startsWith(UiMessages.MARK_TASK)) {
+            return "mark-label";
+        }
+        if (response.startsWith(UiMessages.UNMARK_TASK)) {
+            return "unmark-label";
+        }
+        return "standard-label";
     }
 }
