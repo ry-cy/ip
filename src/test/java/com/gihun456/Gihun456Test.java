@@ -117,7 +117,7 @@ public class Gihun456Test {
     }
 
     @Test
-    public void byeDuringConfirmation_discardsPendingTask() throws Exception {
+    public void byeDuringConfirmation_isRejectedAndKeepsPendingTaskActive() throws Exception {
         Path dataFile = Files.createTempFile("gihun456-conflict-bye", ".txt");
         try {
             Gihun456 app = new Gihun456(dataFile.toString());
@@ -125,7 +125,10 @@ public class Gihun456Test {
             app.processCommand("deadline Submit report /by 15/09/2026 1030");
             app.processCommand("event Team meeting /from 15/09/2026 1000 /to 15/09/2026 1100");
 
-            assertEquals(UiMessages.FAREWELL, app.processCommand("bye"));
+            assertEquals(
+                    ErrorMessages.ERROR_PREFIX + ErrorMessages.INVALID_CONFIRMATION,
+                    app.getResponse("bye"));
+            assertEquals(UiMessages.TASK_NOT_ADDED, app.processCommand("no"));
             assertEquals(1, Files.readAllLines(dataFile).size());
         } finally {
             Files.deleteIfExists(dataFile);

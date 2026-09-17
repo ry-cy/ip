@@ -75,7 +75,7 @@ public class MainWindow extends AnchorPane {
         );
         userInput.clear();
 
-        if (input.trim().equalsIgnoreCase("bye")) {
+        if (input.trim().equalsIgnoreCase("bye") && response.equals(UiMessages.FAREWELL)) {
             userInput.setDisable(true);
             sendButton.setDisable(true);
             PauseTransition exitDelay = new PauseTransition(javafx.util.Duration.seconds(5));

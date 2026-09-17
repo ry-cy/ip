@@ -49,4 +49,4 @@
 - `yes` adds and saves the pending task.
 - `no` leaves the task list and storage unchanged.
 - Invalid confirmation input shows an error and keeps the confirmation pending.
-- `bye` cancels the pending task and exits without saving it.
+- `bye` is rejected as invalid confirmation input and keeps the confirmation pending.

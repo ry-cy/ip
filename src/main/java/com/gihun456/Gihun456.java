@@ -262,10 +262,6 @@ public class Gihun456 {
             pendingConfirmation = null;
             return UiMessages.TASK_NOT_ADDED;
         }
-        if (response.equalsIgnoreCase("bye")) {
-            pendingConfirmation = null;
-            return UiMessages.FAREWELL;
-        }
         throw new GihunException(ErrorMessages.INVALID_CONFIRMATION);
     }
 
