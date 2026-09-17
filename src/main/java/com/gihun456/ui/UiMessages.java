@@ -11,27 +11,38 @@ public final class UiMessages {
 
                          """;
 
-    public static final String GREETING = "Hello! I'm Gihun456.\nWhat can I do for you?";
-    public static final String FAREWELL = "Bye. Hope to see you again soon!";
+    public static final String GREETING = "Hello! I'm Gihun456.\nAre you ready to play a game?";
+    public static final String FAREWELL = "Player 456 eliminated.";
     public static final String SEP = "____________________________________________________________";
 
-    public static final String LIST_TASKS = "Here are the tasks in your list:";
-    public static final String LIST_MATCHING_TASKS = "Here are the matching tasks in your list:";
-    public static final String NO_MATCHING_TASKS = "No matching tasks found.";
-    public static final String ADD_TASK = "Got it. I've added this task:";
-    public static final String REMOVE_TASK = "Noted. I've removed this task:";
-    public static final String MARK_TASK = "Nice! I've marked this task as done:";
-    public static final String UNMARK_TASK = "OK, I've marked this task as not done yet:";
-    public static final String EMPTY_STORAGE = "Storage empty.";
-    public static final String UPCOMING_REMINDERS = "Upcoming deadlines/events:";
-    public static final String MISSED_REMINDERS = "Missed deadlines/events:";
-    public static final String NO_REMINDERS = "No upcoming or missed reminders.";
-    public static final String CONFLICT_WARNING = "This task conflicts with existing tasks:";
-    public static final String PROPOSED_TASK = "Proposed task:";
-    public static final String CONFLICTING_TASKS = "Conflicting tasks:";
-    public static final String CONFLICT_CONFIRMATION = "Add it anyway? (yes/no)";
-    public static final String TASK_NOT_ADDED = "Okay, I did not add the task.";
+    public static final String LIST_TASKS = "Here are the games in your list:";
+    public static final String LIST_MATCHING_TASKS = "Here are the games matching your search:";
+    public static final String NO_MATCHING_TASKS = "No matching games found.";
+    public static final String ADD_TASK = "Green light, Player 456. This game has been added:";
+    public static final String REMOVE_TASK = "This game has been removed from your list:";
+    public static final String MARK_TASK = "Well done, Player 456. You've cleared this game:";
+    public static final String UNMARK_TASK = "This game is back on the list:";
+    public static final String EMPTY_STORAGE = "The game list is empty.";
+    public static final String UPCOMING_REMINDERS = "Upcoming games:";
+    public static final String MISSED_REMINDERS = "Missed games:";
+    public static final String NO_REMINDERS = "No upcoming games waiting for you.";
+    public static final String CONFLICT_WARNING = "Careful, Player 456. This game overlaps with:";
+    public static final String PROPOSED_TASK = "Your proposed game:";
+    public static final String CONFLICTING_TASKS = "Games already in this time slot:";
+    public static final String CONFLICT_CONFIRMATION = "Time to make a choice, Player 456. (yes/no)";
+    public static final String TASK_NOT_ADDED = "Understood. The game was not added.";
+    public static final String TASK_COUNT = "Player 456, you now have %d games in your list.";
 
     private UiMessages() {
+    }
+
+    /**
+     * Creates a message showing the current number of tasks.
+     *
+     * @param taskCount Number of tasks in the list.
+     * @return Formatted task-count message.
+     */
+    public static String getTaskCountMessage(int taskCount) {
+        return String.format(TASK_COUNT, taskCount);
     }
 }
