@@ -10,6 +10,16 @@
     -fx-font: 20px "Arial";
 }
 
+.input-hint {
+    -fx-text-fill: #5b6f62;
+    -fx-font: 20px "Arial";
+    -fx-padding: 0 8px 0 10px;
+}
+
+.input-bar {
+    -fx-padding: 0;
+}
+
 .button {
     -fx-background-color: mediumspringgreen;
     -fx-font: italic bold 16px "Arial";
@@ -46,4 +56,3 @@
     -fx-pref-height: 0;
     -fx-opacity: 0;
 }
-
