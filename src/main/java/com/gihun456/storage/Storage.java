@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,7 +118,7 @@ public class Storage {
                         default:
                             throw new GihunException(ErrorMessages.CANNOT_PARSE_TASK);
                     }
-                } catch (GihunException e) {
+                } catch (GihunException | DateTimeParseException e) {
                     continue;
                 }
 
